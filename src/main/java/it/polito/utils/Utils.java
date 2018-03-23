@@ -5,4 +5,5 @@ package it.polito.utils;
  */
 public class Utils {
     public static final double MAX_SPEED = 100;
+    public static final String FILE_PATH = "users.txt";
 }

@@ -1,7 +1,6 @@
 package it.polito.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.deploy.net.HttpRequest;
 import it.polito.data.Position;
 import it.polito.utils.InvalidSpeedException;
 import it.polito.utils.NullRequestException;
@@ -9,11 +8,8 @@ import it.polito.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -35,16 +31,15 @@ import java.util.stream.Collectors;
  *       2) session.getAttributes() -> da usare SOLO server-side, in pratica lo uso per passarmi parametri dal filtro al servlet
  *                                  oppure tra diversi servlet
  */
-public class PositionsDatabase {
-    private static ConcurrentHashMap<String, CopyOnWriteArrayList<Position>> positionDataBase = null;
-    private static PositionsDatabase ourInstance = new PositionsDatabase();
+public class PositionsDatabaseInteractions {
+    private static ConcurrentHashMap<String, CopyOnWriteArrayList<Position>> positionDataBase = new ConcurrentHashMap<>();
+    private static PositionsDatabaseInteractions ourInstance = new PositionsDatabaseInteractions();
 
-    public static PositionsDatabase getInstance() {
+    public static PositionsDatabaseInteractions getInstance() {
         return ourInstance;
     }
 
-    private PositionsDatabase() {
-        positionDataBase = new ConcurrentHashMap<String, CopyOnWriteArrayList<Position>>();
+    private PositionsDatabaseInteractions() {
     }
 
     /*

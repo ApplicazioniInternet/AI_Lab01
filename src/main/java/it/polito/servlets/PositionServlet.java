@@ -1,6 +1,6 @@
 package it.polito.servlets;
 
-import it.polito.service.PositionsDatabase;
+import it.polito.service.PositionsDatabaseInteractions;
 import it.polito.utils.InvalidSpeedException;
 import it.polito.utils.NullRequestException;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 @WebServlet(urlPatterns = "/positions")
 public class PositionServlet extends HttpServlet{
-    static final PositionsDatabase db = PositionsDatabase.getInstance();
+    private static final PositionsDatabaseInteractions db = PositionsDatabaseInteractions.getInstance();
 
     /*
         200 -> tutto ok
