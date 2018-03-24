@@ -40,7 +40,7 @@ public class GeneralPurposeFilter implements Filter{
             resp = (HttpServletResponse) servletResponse;
             HttpSession session = req.getSession();
 
-            if(session.getAttribute("user") == null && !session.getAttribute("logout").equals("true")){
+            if(session.getAttribute("user") == null /*&& !session.getAttribute("logout").equals("true")*/){
                 // L'utente non si è ancora loggato, quindi devo redirigerlo al servlet di login
                 String newUrl = req.getRequestURI() + "/login";
                 resp.sendRedirect(newUrl);

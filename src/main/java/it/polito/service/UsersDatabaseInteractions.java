@@ -1,8 +1,12 @@
 package it.polito.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.User;
+import it.polito.utils.NullRequestException;
 import it.polito.utils.Utils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.NotAuthorizedException;
 import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
 /***
@@ -72,5 +76,26 @@ public class UsersDatabaseInteractions {
      */
     public static void putUser(String name, String pwd){
         users.put(name, new User(name, pwd));
+    }
+
+    /*
+        Analogamente alla funzione in PositionsDatabaseInteractions
+        Questa funzione è dove accade la vera magia della POST. Per mantenere il design pattern corretto,
+        il servlet non si deve occupare dell'allocazione di oggetti e cazzate varie, ci pensa questa funzione che
+        ha coscienza della struttura dei dati (data layer).
+     */
+    public static void performPost(HttpServletRequest req) throws IOException,  NullRequestException{
+        if(req == null)
+            throw( new NullRequestException() );
+
+        ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
+        User postedUser = mapper.readValue(req.getReader(), User.class);
+
+        //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
+        if(!isAuthorized(postedUser.getUsername(), postedUser.getPassword())){
+            throw new NotAuthorizedException(req);
+        }
+
+        //Da continuare.....
     }
 }
