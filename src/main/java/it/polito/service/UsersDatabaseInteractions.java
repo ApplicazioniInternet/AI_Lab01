@@ -3,10 +3,11 @@ package it.polito.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.User;
 import it.polito.utils.NullRequestException;
+import it.polito.utils.UnauthorizedException;
 import it.polito.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.NotAuthorizedException;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
 /***
@@ -84,18 +85,26 @@ public class UsersDatabaseInteractions {
         il servlet non si deve occupare dell'allocazione di oggetti e cazzate varie, ci pensa questa funzione che
         ha coscienza della struttura dei dati (data layer).
      */
-    public static void performPost(HttpServletRequest req) throws IOException,  NullRequestException{
+    public static void performPost(HttpServletRequest req) throws IOException, NullRequestException, UnauthorizedException {
         if(req == null)
             throw( new NullRequestException() );
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
         User postedUser = mapper.readValue(req.getReader(), User.class);
 
-        //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
-        if(!isAuthorized(postedUser.getUsername(), postedUser.getPassword())){
-            throw new NotAuthorizedException(req);
-        }
+        String pwd = postedUser.getPassword();
+        /*
+            Qui elaborazione pwd: hash (direi SHA-256) + XOR con Username
+            Dubbio: è corretto memorizzare nella mappa password come stringa o è meglio come byte?
+         */
 
-        //Da continuare.....
+        //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
+        if(!isAuthorized(postedUser.getUsername(), pwd))
+            throw new UnauthorizedException();
+        else{
+            //Devo settare l'attributo "user" nella sessione
+            HttpSession session = req.getSession();
+            session.setAttribute("user", postedUser.getUsername());
+        }
     }
 }
