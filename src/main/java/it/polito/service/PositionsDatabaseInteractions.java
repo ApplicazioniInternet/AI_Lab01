@@ -70,17 +70,18 @@ public class PositionsDatabaseInteractions {
 
         Position lastPos = getLastPositionUser(name); // Prendo l'ultima posizione inseritaci dallo user
 
-        if (lastPos == null) // È la prima posizione inserita
-            return;
+        if (lastPos != null) {
+            double distance = lastPos.getDistanceFrom(newPos); // Calcolo la distanza tra le due e poi la velocità
+            double speed = (distance * 1000) / (newPos.getTimestamp() - lastPos.getTimestamp()) * 1000; // Perché il timestamp è in millisecondi!!! La formula ritorna i KM
 
-        double distance = lastPos.getDistanceFrom(newPos); // Calcolo la distanza tra le due e poi la velocità
-        double speed = (distance * 1000) / (newPos.getTimestamp() - lastPos.getTimestamp()) * 1000; // Perché il timestamp è in millisecondi!!! La formula ritorna i KM
-
-        if (speed > Utilities.MAX_SPEED)
-            // Non vengono soddisfatti i requisiti quindi tiro un'exception
-            throw (new InvalidSpeedException());
-        else
-            // Tutto ok, posso aggiungere la posizione
+            if (speed > Utilities.MAX_SPEED)
+                // Non vengono soddisfatti i requisiti quindi tiro un'exception
+                throw (new InvalidSpeedException());
+            else
+                // Tutto ok, posso aggiungere la posizione
+                positionDataBase.get(name).add(newPos);
+        } else
+            // È la prima quindi la aggiungo comunque
             positionDataBase.get(name).add(newPos);
     }
 
@@ -88,11 +89,16 @@ public class PositionsDatabaseInteractions {
         Funzione per prendere l'ultima posizione che ci è stata inserita da un certo utente
      */
     private static Position getLastPositionUser(String name) {
+        if (!positionDataBase.containsKey(name)) {
+            positionDataBase.put(name, new CopyOnWriteArrayList<>());
+            return null;
+        }
+
         int last = positionDataBase.get(name).size();
         if (last == 0)
             return null;
 
-        return positionDataBase.get(name).get(last);
+        return positionDataBase.get(name).get(last - 1);
     }
 
     /*
@@ -126,7 +132,7 @@ public class PositionsDatabaseInteractions {
         String userName = (String) req.getParameter("user"); // Prendo lo username
         String beforeAsString = (String) req.getParameter("before");
         String afterAsString = (String) req.getParameter("after");
-        long before = Integer.MAX_VALUE;
+        long before = Long.MAX_VALUE;
         long after = -1;
 
         if (beforeAsString != null)

@@ -1,6 +1,5 @@
 package it.polito.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.User;
 import it.polito.data.UserValue;
 import it.polito.utils.NullRequestException;
@@ -76,22 +75,19 @@ public class UsersDatabaseInteractions {
         if (users.isEmpty())
             loadUsers(Utilities.FILE_PATH, sc);
 
-        ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
-        UserValue postedUser = mapper.readValue(req.getReader(), UserValue.class);
-
-        String pwd = postedUser.getPassword();
         /*
             Qui elaborazione pwd: hash (direi SHA-256) + XOR con Username
             Dubbio: è corretto memorizzare nella mappa password come stringa o è meglio come byte?
          */
 
         //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
-        if (!isAuthorized(postedUser.getUsername(), pwd))
+        if (!isAuthorized(req.getParameter("user"), req.getParameter("password")))
             throw new UnauthorizedException();
         else {
             //Devo settare l'attributo "user" nella sessione
             HttpSession session = req.getSession();
-            session.setAttribute("user", postedUser.getUsername());
+            //System.out.println("Lo user <<" + postedUser.getUsername() + ">> è autorizzato!");
+            session.setAttribute("user", req.getParameter("user"));
         }
     }
 
