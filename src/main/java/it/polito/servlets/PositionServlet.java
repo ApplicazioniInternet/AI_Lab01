@@ -51,8 +51,8 @@ public class PositionServlet extends HttpServlet{
                 // Se arrivo qua allora vuol dire che tutto va bene e la position è stata creata
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } catch (InvalidSpeedException e) {
-                // Dico al client che la richiesta aveva un formato sbagliato, non sapevo che far capire che la velocità
-                // non andasse bene
+                // Dico al client che la richiesta aveva un formato sbagliato, la velocità
+                // non va bene
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 //throw( new ServletException() );
             } catch (NullRequestException e) {

@@ -9,11 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotAuthorizedException;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /***
  * Web Servlet per fare il login di uno user. Deve controllare che lo user esista nel database
@@ -36,6 +32,7 @@ public class LoginServlet extends HttpServlet{
 
         try{
             dbUser.performPost(req, getServletContext());
+
             // Se sono qui significa che l'utente è stato autenticato con successo
             resp.setStatus(HttpServletResponse.SC_OK);
         }

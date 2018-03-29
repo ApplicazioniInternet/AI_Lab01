@@ -75,11 +75,6 @@ public class UsersDatabaseInteractions {
         if (users.isEmpty())
             loadUsers(Utilities.FILE_PATH, sc);
 
-        /*
-            Qui elaborazione pwd: hash (direi SHA-256) + XOR con Username
-            Dubbio: è corretto memorizzare nella mappa password come stringa o è meglio come byte?
-         */
-
         //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
         if (!isAuthorized(req.getParameter("user"), req.getParameter("password")))
             throw new UnauthorizedException();
