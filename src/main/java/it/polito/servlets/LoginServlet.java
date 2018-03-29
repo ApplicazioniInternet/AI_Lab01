@@ -48,10 +48,10 @@ public class LoginServlet extends HttpServlet{
             //throw new NotAuthorizedException(req);
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        catch(Exception e){
-            //Teoricamente sia un'IOException sia una NullRequest Exception sono dovute ad una BadRequest
-            //throw new BadRequestException();
+        catch(IOException e){
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (NullRequestException e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
     }
 }

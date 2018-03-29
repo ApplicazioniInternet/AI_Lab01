@@ -5,12 +5,15 @@ import it.polito.data.User;
 import it.polito.data.UserValue;
 import it.polito.utils.NullRequestException;
 import it.polito.utils.UnauthorizedException;
-import it.polito.utils.Utils;
+import it.polito.utils.Utilities;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentHashMap;
 
 /***
@@ -39,7 +42,7 @@ public class UsersDatabaseInteractions {
         sono corrette.
      */
     public static boolean isAuthorized(String name, String pwd) {
-        return (users.containsKey(name)) && (users.get(name).isPWdOk(pwd));
+        return (users.containsKey(name)) && (users.get(name).isPWdOk(name, pwd));
     }
 
     /*
@@ -68,16 +71,13 @@ public class UsersDatabaseInteractions {
      */
     public static void performPost(HttpServletRequest req, ServletContext sc) throws IOException, NullRequestException, UnauthorizedException {
         if (req == null)
-            throw ( new NullRequestException() );
+            throw (new NullRequestException());
 
-        if(users.isEmpty())
-            loadUsers(Utils.FILE_PATH, sc);
+        if (users.isEmpty())
+            loadUsers(Utilities.FILE_PATH, sc);
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
         UserValue postedUser = mapper.readValue(req.getReader(), UserValue.class);
-        /*System.out.println("JSON -> JAVA: 1) username: " + postedUser.getUsername() + "\n"
-                                        + "2) password: " + postedUser.getPassword()
-                            );*/
 
         String pwd = postedUser.getPassword();
         /*
@@ -90,7 +90,6 @@ public class UsersDatabaseInteractions {
             throw new UnauthorizedException();
         else {
             //Devo settare l'attributo "user" nella sessione
-            System.out.println("L'utente <<" + postedUser.getUsername() + ">> è autorizzato!");
             HttpSession session = req.getSession();
             session.setAttribute("user", postedUser.getUsername());
         }
@@ -100,8 +99,8 @@ public class UsersDatabaseInteractions {
         Funzione che effettivamente carica gli users nella struttura dati.
      */
     private static void loadUsers(String file, ServletContext sc) throws IOException {
-        if(sc == null)
-            throw( new IOException() );
+        if (sc == null)
+            throw (new IOException());
 
         InputStream is = sc.getResourceAsStream(file);
         InputStreamReader isr = new InputStreamReader(is);
@@ -109,7 +108,7 @@ public class UsersDatabaseInteractions {
                 new BufferedReader(isr);
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println("Ho letto: " + line);
+            //System.out.println("Ho letto: " + line);
             String[] res = line.split(" ");
             putUser(res[0], res[1]);
         }
@@ -121,6 +120,6 @@ public class UsersDatabaseInteractions {
         Solo per debuggare
      */
     public static void performGet(ServletContext sc) throws IOException {
-        loadUsers(Utils.FILE_PATH, sc);
+        loadUsers(Utilities.FILE_PATH, sc);
     }
 }

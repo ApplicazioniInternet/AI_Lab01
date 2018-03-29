@@ -1,5 +1,12 @@
 package it.polito.data;
 
+import it.polito.utils.Utilities;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
 /***
  * Questa classe è utilizzata per descrivere uno user. Contiene:
  *      - username = il nome con il quale si identifica lo user
@@ -10,9 +17,16 @@ package it.polito.data;
  */
 public class User {
     private UserValue user;
+    private byte[] digestPassword;
 
     public User(UserValue u) {
         this.user = u;
+        try {
+            digestPassword = Utilities.sha256(u.getUsername(), u.getPassword());
+        } catch (NoSuchAlgorithmException e) {
+            // La salvo come password normale se non esistesse l'algoritmo
+            this.digestPassword = u.getPassword().getBytes();
+        }
     }
 
     public String getUsername() {
@@ -27,15 +41,17 @@ public class User {
         return this.user.getPassword();
     }
 
-    public void setPassword(String password) {
-        this.user.setPassword(password);
-    }
-
     /*
         Funzione per controllare se la password inserita è corretta
         oppure no.
      */
-    public boolean isPWdOk(String pwd) {
-        return this.user.getPassword().equals(pwd);
+    public boolean isPWdOk(String username, String pwd) {
+        byte[] digestSent;
+        try {
+            digestSent = Utilities.sha256(username, pwd);
+        } catch (NoSuchAlgorithmException e) {
+            return Arrays.equals(this.digestPassword, pwd.getBytes(StandardCharsets.UTF_8));
+        }
+        return Arrays.equals(this.digestPassword, digestSent);
     }
 }
