@@ -6,37 +6,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eeebba8d-c3fa-4a82-8038-e29f9ddabf56" name="Default" comment="Versione 0.1.4 del 29/03/2018.&#10;Login funziona tutto.&#10;Ho aggiunto una class &quot;UserValue&quot;, la quale serve per potere leggere il Json essendo che la libreria Jackson prevede che nella classe dove vado a mappare le cose ci siano solamente variabili (elementari, ossia int, string,...), getters e setters. Nient'altro.">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_0_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_api_5_0_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_commons_1_0_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_opentest4j_opentest4j_1_0_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/it/polito/data/PositionValue.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/module-info.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Lab01_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/Lab01_war_exploded.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_3_8_1.xml" afterPath="" />
+    <list default="true" id="eeebba8d-c3fa-4a82-8038-e29f9ddabf56" name="Default" comment="Versione 0.1.5 del 29/03/2018.&#10;Login funziona tutto con la crittografia.&#10;Ho aggiunto l'hash della password">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Lab01.iml" afterPath="$PROJECT_DIR$/Lab01.iml" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/data/Position.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/data/Position.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/data/User.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/data/User.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/service/PositionsDatabaseInteractions.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/service/PositionsDatabaseInteractions.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/service/UsersDatabaseInteractions.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/service/UsersDatabaseInteractions.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/servlets/LoginServlet.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/servlets/LoginServlet.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/utils/Utils.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/utils/Utilities.java" />
-      <change beforePath="$PROJECT_DIR$/target/Lab01.war" afterPath="$PROJECT_DIR$/target/Lab01.war" />
-      <change beforePath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/data/Position.class" afterPath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/data/Position.class" />
-      <change beforePath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/data/User.class" afterPath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/data/User.class" />
-      <change beforePath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/service/PositionsDatabaseInteractions.class" afterPath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/service/PositionsDatabaseInteractions.class" />
-      <change beforePath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/service/UsersDatabaseInteractions.class" afterPath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/service/UsersDatabaseInteractions.class" />
-      <change beforePath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/servlets/LoginServlet.class" afterPath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/servlets/LoginServlet.class" />
-      <change beforePath="$PROJECT_DIR$/target/Lab01/WEB-INF/classes/it/polito/utils/Utils.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/data/Position.class" afterPath="$PROJECT_DIR$/target/classes/it/polito/data/Position.class" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/data/User.class" afterPath="$PROJECT_DIR$/target/classes/it/polito/data/User.class" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/service/PositionsDatabaseInteractions.class" afterPath="$PROJECT_DIR$/target/classes/it/polito/service/PositionsDatabaseInteractions.class" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/service/UsersDatabaseInteractions.class" afterPath="$PROJECT_DIR$/target/classes/it/polito/service/UsersDatabaseInteractions.class" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/servlets/LoginServlet.class" afterPath="$PROJECT_DIR$/target/classes/it/polito/servlets/LoginServlet.class" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/utils/Utils.class" afterPath="" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -48,68 +19,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="LoginServlet.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/servlets/LoginServlet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="42" column="14" lean-forward="false" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/data/User.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="48" column="26" lean-forward="false" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1016#1017#0" expanded="true" />
-                <element signature="e#1062#1063#0" expanded="true" />
-                <element signature="e#1110#1111#0" expanded="true" />
-                <element signature="e#1157#1158#0" expanded="true" />
-                <element signature="e#1192#1193#0" expanded="true" />
-                <element signature="e#1238#1239#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UsersDatabaseInteractions.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/service/UsersDatabaseInteractions.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-371">
-              <caret line="76" column="47" lean-forward="false" selection-start-line="76" selection-start-column="47" selection-end-line="76" selection-end-column="47" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="users.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/uploads/users.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Utilities.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/utils/Utilities.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="74" lean-forward="false" selection-start-line="15" selection-start-column="74" selection-end-line="15" selection-end-column="74" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -752,7 +662,7 @@
       <workItem from="1521831690411" duration="5122000" />
       <workItem from="1521933248637" duration="26000" />
       <workItem from="1522045891717" duration="488000" />
-      <workItem from="1522308763942" duration="15828000" />
+      <workItem from="1522308763942" duration="15997000" />
     </task>
     <task id="LOCAL-00001" summary="Versione 0.1 del 22/03/2018">
       <created>1521753958782</created>
@@ -796,7 +706,14 @@
       <option name="project" value="LOCAL" />
       <updated>1522317648026</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Versione 0.1.5 del 29/03/2018.&#10;Login funziona tutto con la crittografia.&#10;Ho aggiunto l'hash della password">
+      <created>1522337532512</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1522337532512</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -814,7 +731,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36207000" />
+    <option name="totallyTimeSpent" value="36376000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -829,7 +746,7 @@
     <frame x="0" y="22" width="1440" height="878" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3231162" sideWeight="0.50572246" order="13" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.49427754" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -845,7 +762,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32950193" sideWeight="0.52288985" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32950193" sideWeight="0.50572246" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36015326" sideWeight="0.49427754" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.49427754" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.49427754" order="12" side_tool="false" content_ui="tabs" />
@@ -919,7 +836,8 @@
     <MESSAGE value="Versione 0.1.2 del 23/03/2018" />
     <MESSAGE value="Versione 0.1.2 del 29/03/2018.&#10;Bug fixed: - lettura del file degli utenti." />
     <MESSAGE value="Versione 0.1.4 del 29/03/2018.&#10;Login funziona tutto.&#10;Ho aggiunto una class &quot;UserValue&quot;, la quale serve per potere leggere il Json essendo che la libreria Jackson prevede che nella classe dove vado a mappare le cose ci siano solamente variabili (elementari, ossia int, string,...), getters e setters. Nient'altro." />
-    <option name="LAST_COMMIT_MESSAGE" value="Versione 0.1.4 del 29/03/2018.&#10;Login funziona tutto.&#10;Ho aggiunto una class &quot;UserValue&quot;, la quale serve per potere leggere il Json essendo che la libreria Jackson prevede che nella classe dove vado a mappare le cose ci siano solamente variabili (elementari, ossia int, string,...), getters e setters. Nient'altro." />
+    <MESSAGE value="Versione 0.1.5 del 29/03/2018.&#10;Login funziona tutto con la crittografia.&#10;Ho aggiunto l'hash della password" />
+    <option name="LAST_COMMIT_MESSAGE" value="Versione 0.1.5 del 29/03/2018.&#10;Login funziona tutto con la crittografia.&#10;Ho aggiunto l'hash della password" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1250,20 +1168,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/utils/Utilities.java">
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/uploads/users.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="74" lean-forward="false" selection-start-line="15" selection-start-column="74" selection-end-line="15" selection-end-column="74" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="45">
+          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/servlets/LoginServlet.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/service/UsersDatabaseInteractions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="42" column="14" lean-forward="false" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
+        <state relative-caret-position="-347">
+          <caret line="76" column="47" lean-forward="false" selection-start-line="76" selection-start-column="47" selection-end-line="76" selection-end-column="47" />
           <folding />
         </state>
       </provider>
@@ -1284,19 +1200,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/service/UsersDatabaseInteractions.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/servlets/LoginServlet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-371">
-          <caret line="76" column="47" lean-forward="false" selection-start-line="76" selection-start-column="47" selection-end-line="76" selection-end-column="47" />
+        <state relative-caret-position="172">
+          <caret line="42" column="14" lean-forward="false" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/uploads/users.txt">
+    <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/utils/Utilities.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-          <folding />
+        <state relative-caret-position="225">
+          <caret line="15" column="74" lean-forward="false" selection-start-line="15" selection-start-column="74" selection-end-line="15" selection-end-column="74" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
