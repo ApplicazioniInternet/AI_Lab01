@@ -2,15 +2,12 @@ package it.polito.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.User;
+import it.polito.data.UserValue;
 import it.polito.utils.NullRequestException;
 import it.polito.utils.UnauthorizedException;
 import it.polito.utils.Utils;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -57,7 +54,10 @@ public class UsersDatabaseInteractions {
         la posso sfruttare poi per implementare anche un meccanismo di registrazione).
      */
     public static void putUser(String name, String pwd) {
-        users.put(name, new User(name, pwd));
+        UserValue uv = new UserValue();
+        uv.setUsername(name);
+        uv.setPassword(pwd);
+        users.put(name, new User(uv));
     }
 
     /*
@@ -68,13 +68,16 @@ public class UsersDatabaseInteractions {
      */
     public static void performPost(HttpServletRequest req, ServletContext sc) throws IOException, NullRequestException, UnauthorizedException {
         if (req == null)
-            throw (new NullRequestException());
+            throw ( new NullRequestException() );
 
         if(users.isEmpty())
             loadUsers(Utils.FILE_PATH, sc);
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
-        User postedUser = mapper.readValue(req.getReader(), User.class);
+        UserValue postedUser = mapper.readValue(req.getReader(), UserValue.class);
+        /*System.out.println("JSON -> JAVA: 1) username: " + postedUser.getUsername() + "\n"
+                                        + "2) password: " + postedUser.getPassword()
+                            );*/
 
         String pwd = postedUser.getPassword();
         /*
@@ -87,6 +90,7 @@ public class UsersDatabaseInteractions {
             throw new UnauthorizedException();
         else {
             //Devo settare l'attributo "user" nella sessione
+            System.out.println("L'utente <<" + postedUser.getUsername() + ">> è autorizzato!");
             HttpSession session = req.getSession();
             session.setAttribute("user", postedUser.getUsername());
         }

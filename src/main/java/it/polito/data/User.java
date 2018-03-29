@@ -9,28 +9,26 @@ package it.polito.data;
  *      deciso di usare per salvarla in modo sicuro.
  */
 public class User {
-    private String username;
-    private String password;
+    private UserValue user;
+
+    public User(UserValue u) {
+        this.user = u;
+    }
 
     public String getUsername() {
-        return username;
+        return this.user.getUsername();
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.user.setUsername(username);
     }
 
     public String getPassword() {
-        return password;
+        return this.user.getPassword();
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public User(String name, String pwd){
-        this.username = name;
-        this.password = pwd;
+        this.user.setPassword(password);
     }
 
     /*
@@ -38,6 +36,6 @@ public class User {
         oppure no.
      */
     public boolean isPWdOk(String pwd) {
-        return this.password.equals(pwd);
+        return this.user.getPassword().equals(pwd);
     }
 }

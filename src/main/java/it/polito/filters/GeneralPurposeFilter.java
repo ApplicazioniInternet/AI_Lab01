@@ -47,8 +47,10 @@ public class GeneralPurposeFilter implements Filter{
             }else{
                 // L'utente è autenticato controllo se si vuole sloggare e in caso lo redirigo al servlet per il logout
                 if(session.getAttribute("logout").equals("true")){
-                    String newUrl = req.getRequestURI() + "/logout";
-                    resp.sendRedirect(newUrl);
+                    // Senza redirigerlo posso benissimo invalidare già qua la sessione e ritornare
+                    session.invalidate();
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    return; // <--- IMPORTANTE: devo ritornare dal metodo!
                 }else{
                     // L'utente è autenticato e vuole fare delle operazioni. Controllo il contentType e che tipo di richiesta è.
                     if(!(req.getContentType().equals("application/json") && req.getMethod().equals("POST"))){
