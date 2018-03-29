@@ -4,4 +4,12 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+    <filter>
+        <filter-name>Filter</filter-name>
+        <filter-class>it.polito.filters.GeneralPurposeFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Filter</filter-name>
+        <url-pattern>/positions</url-pattern>
+    </filter-mapping>
 </web-app>

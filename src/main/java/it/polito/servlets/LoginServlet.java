@@ -1,6 +1,7 @@
 package it.polito.servlets;
 
 import it.polito.service.UsersDatabaseInteractions;
+import it.polito.utils.NullRequestException;
 import it.polito.utils.UnauthorizedException;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ public class LoginServlet extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try{
-            dbUser.performPost(req);
+            dbUser.performPost(req, getServletContext());
             //Se sono qui significa che l'utente è stato autenticato con successo
             resp.setStatus(HttpServletResponse.SC_OK);
         }
@@ -44,5 +45,11 @@ public class LoginServlet extends HttpServlet{
             //Teoricamente sia un'IOException sia una NullRequest Exception sono dovute ad una BadRequest
             throw new BadRequestException();
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doGet(req, resp);
+        dbUser.performGet(getServletContext());
     }
 }
