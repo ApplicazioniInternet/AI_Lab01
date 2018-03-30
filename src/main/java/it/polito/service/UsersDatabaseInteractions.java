@@ -60,7 +60,7 @@ public class UsersDatabaseInteractions {
         UserValue uv = new UserValue();
         uv.setUsername(name);
         uv.setPassword(pwd);
-        users.put(name, new User(uv));
+        users.put(name, new User(uv, false));
     }
 
     /*

@@ -18,13 +18,16 @@ public class User {
     private String userName;
     private byte[] digestPassword;
 
-    public User(UserValue u) {
+    public User(UserValue u, boolean encoded) {
         userName = u.getUsername();
         try {
-            digestPassword = Utilities.sha256(u.getUsername(), u.getPassword());
+            if (!encoded)
+                digestPassword = Utilities.sha256(u.getUsername(), u.getPassword());
+            else
+                digestPassword = u.getPassword().getBytes(StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException e) {
             // La salvo come password normale se non esistesse l'algoritmo
-            this.digestPassword = u.getPassword().getBytes();
+            this.digestPassword = u.getPassword().getBytes(StandardCharsets.UTF_8);
         }
     }
 
