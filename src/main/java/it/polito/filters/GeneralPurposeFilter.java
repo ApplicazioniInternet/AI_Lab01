@@ -45,7 +45,7 @@ public class GeneralPurposeFilter implements Filter{
                 return;
             }else{
                 // L'utente è autenticato controllo se si vuole sloggare e in caso lo redirigo al servlet per il logout
-                if (session.getAttribute("logout") != null) {
+                if (req.getParameter("logout") != null) {
                     // Senza redirigerlo posso benissimo invalidare già qua la sessione e ritornare
                     session.invalidate();
                     resp.setStatus(HttpServletResponse.SC_OK);

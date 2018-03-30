@@ -3,7 +3,7 @@ package it.polito.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.Position;
 import it.polito.data.PositionValue;
-import it.polito.utils.InvalidSpeedException;
+import it.polito.utils.InvalidPositionException;
 import it.polito.utils.NullRequestException;
 import it.polito.utils.Utilities;
 
@@ -36,6 +36,9 @@ import java.util.stream.Collectors;
 public class PositionsDatabaseInteractions {
     private static ConcurrentHashMap<String, CopyOnWriteArrayList<Position>> positionDataBase = new ConcurrentHashMap<>();
     private static PositionsDatabaseInteractions ourInstance = new PositionsDatabaseInteractions();
+    private static double validValueLowerBound = -180;
+    private static double validValueUpperBound = 180;
+    private static long minTimestamp = 1522000000;
 
     private PositionsDatabaseInteractions() {
     }
@@ -65,31 +68,17 @@ public class PositionsDatabaseInteractions {
 
         ATTENZIONE: assumiamo che i dati siano stati controllati prima di essere passati qua.
      */
-    public static void addPosition(String name, Position newPos) throws InvalidSpeedException {
+    public static void addPosition(String name, Position newPos) throws InvalidPositionException {
         if (!positionDataBase.containsKey(name)) // Nuovo utente
             newUser(name);
 
-        Position lastPos = getLastPositionUser(name); // Prendo l'ultima posizione inseritaci dallo user
-
-        if (lastPos != null) {
-            double distance = lastPos.getDistanceFrom(newPos); // Calcolo la distanza tra le due e poi la velocità
-            double speed = (distance * 1000) / (newPos.getTimestamp() - lastPos.getTimestamp()) * 1000; // Perché il timestamp è in millisecondi!!! La formula ritorna i KM
-
-            if (speed > Utilities.MAX_SPEED)
-                // Non vengono soddisfatti i requisiti quindi tiro un'exception
-                throw (new InvalidSpeedException());
-            else
-                // Tutto ok, posso aggiungere la posizione
-                positionDataBase.get(name).add(newPos);
-        } else
-            // È la prima quindi la aggiungo comunque
-            positionDataBase.get(name).add(newPos);
+        positionDataBase.get(name).add(newPos);
     }
 
     /*
         Funzione per prendere l'ultima posizione che ci è stata inserita da un certo utente
      */
-    private static Position getLastPositionUser(String name) {
+    protected static Position getLastPositionUser(String name) {
         if (!positionDataBase.containsKey(name)) {
             positionDataBase.put(name, new CopyOnWriteArrayList<>());
             return null;
@@ -107,7 +96,9 @@ public class PositionsDatabaseInteractions {
         il servlet non si deve occupare dell'allocazione di oggetti e cazzate varie, ci pensa questa funzione che
         ha coscienza della struttura dei dati (data layer).
      */
-    public static void performPost(HttpServletRequest req) throws IOException, InvalidSpeedException, NullRequestException {
+    public static void performPost(HttpServletRequest req) throws IOException, InvalidPositionException, NullRequestException {
+        double speed = 0;
+
         if (req == null)
             throw (new NullRequestException());
         HttpSession session = req.getSession();
@@ -115,9 +106,36 @@ public class PositionsDatabaseInteractions {
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
         PositionValue postedPosition = mapper.readValue(req.getReader(), PositionValue.class); // BOOM...! Non ho capito come fa a riempirla da sola però :'(
+        Position newPos = new Position(postedPosition);
 
-        // Ora provo ad aggiungerla
-        addPosition(userName, new Position(postedPosition));
+        long maxTimestamp = (System.currentTimeMillis() / 1000L);
+
+        Position lastPos = getLastPositionUser(userName); // Prendo l'ultima posizione inseritaci dallo user
+
+        if (lastPos != null) {
+            double distance = lastPos.getDistanceFrom(newPos); // Calcolo la distanza tra le due e poi la velocità
+            speed = (distance * 1000) / (newPos.getTimestamp() - lastPos.getTimestamp()) * 1000; // Perché il timestamp è in millisecondi!!! La formula ritorna i KM
+        }
+
+        /**
+         * controllo velocità secondo parametri
+         * contollo che lon e lat siano entro -180 e 180
+         * controllo che il timestamp non sia inferiore al valore di quando abbaimo iniziato il progetto -> passato (si puù anche usare un vaalore più basso
+         * controllo che il timestamp non sia maggiore al valore di quando faccio il controlllo -> futuro
+         **/
+        if (speed > Utilities.MAX_SPEED ||
+                Double.compare(postedPosition.getLongitude(), validValueLowerBound) < 0 ||
+                Double.compare(postedPosition.getLongitude(), validValueUpperBound) > 0 ||
+                Double.compare(postedPosition.getLatitude(), validValueLowerBound) < 0 ||
+                Double.compare(postedPosition.getLatitude(), validValueUpperBound) > 0 ||
+                Long.compare(postedPosition.getTimestamp(), minTimestamp) < 0 ||
+                Long.compare(postedPosition.getTimestamp(), maxTimestamp) > 0) {
+            // Non vengono soddisfatti i requisiti quindi tiro un'exception
+            throw new InvalidPositionException();
+        } else {
+            // Ora provo ad aggiungerla
+            addPosition(userName, newPos);
+        }
     }
 
     /*

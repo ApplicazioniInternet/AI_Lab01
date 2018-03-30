@@ -2,6 +2,8 @@ package it.polito.data;
 
 public class PositionValue {
     private double latitude;
+    private double longitude;
+    private long timestamp;
 
     public double getLatitude() {
         return latitude;
@@ -19,14 +21,8 @@ public class PositionValue {
         this.longitude = longitude;
     }
 
-    public long getTimestamp() {
-        return timestamp;
-    }
+    public long getTimestamp() { return timestamp; }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
-    private double longitude;
-    private long timestamp;
 }

@@ -1,7 +1,7 @@
 package it.polito.servlets;
 
 import it.polito.service.PositionsDatabaseInteractions;
-import it.polito.utils.InvalidSpeedException;
+import it.polito.utils.InvalidPositionException;
 import it.polito.utils.NullRequestException;
 
 import javax.servlet.ServletException;
@@ -50,9 +50,9 @@ public class PositionServlet extends HttpServlet{
 
                 // Se arrivo qua allora vuol dire che tutto va bene e la position è stata creata
                 resp.setStatus(HttpServletResponse.SC_CREATED);
-            } catch (InvalidSpeedException e) {
-                // Dico al client che la richiesta aveva un formato sbagliato, la velocità
-                // non va bene
+            } catch (InvalidPositionException e) {
+                // Dico al client che la richiesta aveva un formato sbagliato,
+                // la velocità lat lon o timestamp non vanno bene
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 //throw( new ServletException() );
             } catch (NullRequestException e) {

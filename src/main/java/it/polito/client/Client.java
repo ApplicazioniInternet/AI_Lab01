@@ -7,7 +7,10 @@ import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpRequest;
 import jdk.incubator.http.HttpResponse;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 
 /***
@@ -15,116 +18,103 @@ import java.net.URI;
  */
 public class Client {
 
-    public int login(String username, String password) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ArrayNode arrayNode = mapper.createArrayNode();
+    public int login(String username, String password)
+            throws URISyntaxException, InterruptedException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
 
-            /**
-             * Create three JSON Objects objectNode1
-             * Add all these three objects in the array
-             */
+        /**
+         * Create three JSON Objects objectNode1
+         * Add all these three objects in the array
+         */
 
-            ObjectNode objectNode1 = mapper.createObjectNode();
-            objectNode1.put("username", username);
-            objectNode1.put("password", password);
-            /**
-             * Array contains JSON Objects
-             */
-            arrayNode.add(objectNode1);
+        ObjectNode objectNode1 = mapper.createObjectNode();
+        objectNode1.put("username", username);
+        objectNode1.put("password", password);
+        /**
+         * Array contains JSON Objects
+         */
+        arrayNode.add(objectNode1);
 
-            HttpClient client = HttpClient.
-                    newBuilder().
-                    build();
+        HttpClient client = HttpClient.
+                newBuilder().
+                build();
 
-            HttpRequest req = HttpRequest.
-                    newBuilder().
-                    header("Content-Type", "application/json").
-                    uri(new URI("http://localhost:8080/login")).
-                    POST(HttpRequest.BodyProcessor.fromString(arrayNode.toString())).
-                    build();
+        HttpRequest req = HttpRequest.
+                newBuilder().
+                header("Content-Type", "application/json").
+                uri(new URI("http://localhost:8080/login")).
+                POST(HttpRequest.BodyProcessor.fromString(arrayNode.toString())).
+                build();
 
-            HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
-            int statusCode = res.statusCode();
-            return statusCode;
-        } catch (Exception e) {
-            throw new RuntimeException(e); // modificare e gestire meglio le eccezioni
-        }
+        HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
+        int statusCode = res.statusCode();
+        return statusCode;
     }
 
-    public int logout(String username, String password) {
-        try {
-            HttpClient client = HttpClient.
-                    newBuilder().
-                    build();
+    public int logout()
+            throws URISyntaxException, InterruptedException, IOException {
+        HttpClient client = HttpClient.
+                newBuilder().
+                build();
 
 
-            HttpRequest req = HttpRequest.
-                    newBuilder().
-                    uri(new URI("http://localhost:8080/logout")).
-                    GET().
-                    build();
+        HttpRequest req = HttpRequest.
+                newBuilder().
+                uri(new URI("http://localhost:8080?logout=true")).
+                GET().
+                build();
 
-            HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
-            int statusCode = res.statusCode();
-            return statusCode;
-        } catch (Exception e) {
-            throw new RuntimeException(e); // modificare e gestire meglio le eccezioni
-        }
+        HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
+        int statusCode = res.statusCode();
+        return statusCode;
     }
 
-    public int sendPosition(double lat, double lon, long time) {
-        try {
+    public int sendPosition(double lat, double lon, long time)
+            throws URISyntaxException, InterruptedException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
 
-            ObjectMapper mapper = new ObjectMapper();
-            ArrayNode arrayNode = mapper.createArrayNode();
+        ObjectNode objectNode1 = mapper.createObjectNode();
+        objectNode1.put("latitude", lat);
+        objectNode1.put("longitude", lon);
+        objectNode1.put("timestamp", time);
+        /**
+         * Array contains JSON Objects
+         */
+        arrayNode.add(objectNode1);
 
-            ObjectNode objectNode1 = mapper.createObjectNode();
-            objectNode1.put("lat", lat);
-            objectNode1.put("lon", lon);
-            objectNode1.put("time", time);
-            /**
-             * Array contains JSON Objects
-             */
-            arrayNode.add(objectNode1);
+        HttpClient client = HttpClient.
+                newBuilder().
+                build();
 
-            HttpClient client = HttpClient.
-                    newBuilder().
-                    build();
+        HttpRequest req = HttpRequest.
+                newBuilder().
+                header("Content-Type", "application/json").
+                uri(new URI("http://localhost:8080/")).
+                POST(HttpRequest.BodyProcessor.fromString(arrayNode.toString())).
+                build();
 
-            HttpRequest req = HttpRequest.
-                    newBuilder().
-                    header("Content-Type", "application/json").
-                    uri(new URI("http://localhost:8080/")).
-                    POST(HttpRequest.BodyProcessor.fromString(arrayNode.toString())).
-                    build();
-
-            HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
-            int statusCode = res.statusCode();
-            return statusCode;
-        } catch (Exception e) {
-            throw new RuntimeException(e); // modificare e gestire meglio le eccezioni
-        }
+        HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
+        int statusCode = res.statusCode();
+        return statusCode;
     }
 
-    public int getPosition(long before, long after) {
-        try {
-            HttpClient client = HttpClient.
-                    newBuilder().
-                    build();
+    public int getPosition(long before, long after)
+            throws URISyntaxException, InterruptedException, IOException {
+        HttpClient client = HttpClient.
+                newBuilder().
+                build();
 
-            HttpRequest req = HttpRequest.
-                    newBuilder().
-                    header("Content-Type", "application/json").
-                    uri(new URI("http://localhost:8080/position")).
-                    GET().
-                    build();
+        HttpRequest req = HttpRequest.
+                newBuilder().
+                header("Content-Type", "application/json").
+                uri(new URI("http://localhost:8080/position")).
+                GET().
+                build();
 
-            HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
-            int statusCode = res.statusCode();
-            return statusCode;
-        } catch (Exception e) {
-            throw new RuntimeException(e); // modificare e gestire meglio le eccezioni
-        }
+        HttpResponse res = client.send(req, HttpResponse.BodyHandler.asString());
+        int statusCode = res.statusCode();
+        return statusCode;
     }
 }
