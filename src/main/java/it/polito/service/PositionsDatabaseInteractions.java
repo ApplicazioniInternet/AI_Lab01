@@ -9,6 +9,7 @@ import it.polito.utils.Utilities;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,8 +110,8 @@ public class PositionsDatabaseInteractions {
     public static void performPost(HttpServletRequest req) throws IOException, InvalidSpeedException, NullRequestException {
         if (req == null)
             throw (new NullRequestException());
-
-        String userName = (String) req.getParameter("user");
+        HttpSession session = req.getSession();
+        String userName = (String) session.getAttribute("user");
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
         PositionValue postedPosition = mapper.readValue(req.getReader(), PositionValue.class); // BOOM...! Non ho capito come fa a riempirla da sola però :'(
@@ -129,7 +130,8 @@ public class PositionsDatabaseInteractions {
         if (req == null)
             throw (new NullRequestException());
 
-        String userName = (String) req.getParameter("user"); // Prendo lo username
+        HttpSession session = req.getSession();
+        String userName = (String) session.getAttribute("user");
         String beforeAsString = (String) req.getParameter("before");
         String afterAsString = (String) req.getParameter("after");
         long before = Long.MAX_VALUE;

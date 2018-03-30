@@ -1,5 +1,6 @@
 package it.polito.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.User;
 import it.polito.data.UserValue;
 import it.polito.utils.NullRequestException;
@@ -41,7 +42,7 @@ public class UsersDatabaseInteractions {
         sono corrette.
      */
     public static boolean isAuthorized(String name, String pwd) {
-        return (users.containsKey(name)) && (users.get(name).isPWdOk(name, pwd));
+        return (users.containsKey(name)) && (getUser(name).isPWdOk(name, pwd));
     }
 
     /*
@@ -75,14 +76,17 @@ public class UsersDatabaseInteractions {
         if (users.isEmpty())
             loadUsers(Utilities.FILE_PATH, sc);
 
+        ObjectMapper mapper = new ObjectMapper();
+        UserValue requestingUserCredentials = mapper.readValue(req.getReader(), UserValue.class);
+
         //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
-        if (!isAuthorized(req.getParameter("user"), req.getParameter("password")))
+        if (!isAuthorized(requestingUserCredentials.getUsername(), requestingUserCredentials.getPassword()))
             throw new UnauthorizedException();
         else {
             //Devo settare l'attributo "user" nella sessione
             HttpSession session = req.getSession();
             //System.out.println("Lo user <<" + postedUser.getUsername() + ">> è autorizzato!");
-            session.setAttribute("user", req.getParameter("user"));
+            session.setAttribute("user", requestingUserCredentials.getUsername());
         }
     }
 
@@ -105,12 +109,5 @@ public class UsersDatabaseInteractions {
         }
 
         bufferedReader.close();
-    }
-
-    /*
-        Solo per debuggare
-     */
-    public static void performGet(ServletContext sc) throws IOException {
-        loadUsers(Utilities.FILE_PATH, sc);
     }
 }
