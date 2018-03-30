@@ -3,7 +3,6 @@ package it.polito.data;
 import it.polito.utils.Utilities;
 
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
@@ -16,11 +15,11 @@ import java.util.Arrays;
  *      deciso di usare per salvarla in modo sicuro.
  */
 public class User {
-    private UserValue user;
+    private String userName;
     private byte[] digestPassword;
 
     public User(UserValue u) {
-        this.user = u;
+        userName = u.getUsername();
         try {
             digestPassword = Utilities.sha256(u.getUsername(), u.getPassword());
         } catch (NoSuchAlgorithmException e) {
@@ -30,15 +29,15 @@ public class User {
     }
 
     public String getUsername() {
-        return this.user.getUsername();
+        return this.userName;
     }
 
     public void setUsername(String username) {
-        this.user.setUsername(username);
+        this.setUsername(username);
     }
 
-    public String getPassword() {
-        return this.user.getPassword();
+    public byte[] getPassword() {
+        return this.digestPassword;
     }
 
     /*
