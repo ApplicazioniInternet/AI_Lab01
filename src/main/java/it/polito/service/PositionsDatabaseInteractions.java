@@ -36,8 +36,10 @@ import java.util.stream.Collectors;
 public class PositionsDatabaseInteractions {
     private static ConcurrentHashMap<String, CopyOnWriteArrayList<Position>> positionDataBase = new ConcurrentHashMap<>();
     private static PositionsDatabaseInteractions ourInstance = new PositionsDatabaseInteractions();
-    private static double validValueLowerBound = -180;
-    private static double validValueUpperBound = 180;
+    private static double validLatLowerBound = -90;
+    private static double validLatUpperBound = 90;
+    private static double validLonLowerBound = -180;
+    private static double validLonUpperBound = 180;
     private static long minTimestamp = 1522000000;
 
     private PositionsDatabaseInteractions() {
@@ -119,15 +121,15 @@ public class PositionsDatabaseInteractions {
 
         /**
          * controllo velocità secondo parametri
-         * contollo che lon e lat siano entro -180 e 180
+         * contollo che lon sia entro -180 e 180 e lat entro -90 e 90
          * controllo che il timestamp non sia inferiore al valore di quando abbaimo iniziato il progetto -> passato (si puù anche usare un vaalore più basso
          * controllo che il timestamp non sia maggiore al valore di quando faccio il controlllo -> futuro
          **/
-        if (speed > Utilities.MAX_SPEED ||
-                Double.compare(postedPosition.getLongitude(), validValueLowerBound) < 0 ||
-                Double.compare(postedPosition.getLongitude(), validValueUpperBound) > 0 ||
-                Double.compare(postedPosition.getLatitude(), validValueLowerBound) < 0 ||
-                Double.compare(postedPosition.getLatitude(), validValueUpperBound) > 0 ||
+        if (speed > Utilities.MAX_SPEED || speed < 0 ||
+                Double.compare(postedPosition.getLongitude(), validLonLowerBound) < 0 ||
+                Double.compare(postedPosition.getLongitude(), validLonUpperBound) > 0 ||
+                Double.compare(postedPosition.getLatitude(), validLatLowerBound) < 0 ||
+                Double.compare(postedPosition.getLatitude(), validLatUpperBound) > 0 ||
                 Long.compare(postedPosition.getTimestamp(), minTimestamp) < 0 ||
                 Long.compare(postedPosition.getTimestamp(), maxTimestamp) > 0) {
             // Non vengono soddisfatti i requisiti quindi tiro un'exception
