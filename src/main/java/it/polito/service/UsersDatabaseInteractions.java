@@ -3,6 +3,7 @@ package it.polito.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.User;
 import it.polito.data.UserValue;
+import it.polito.drivers.SQLUserDAO;
 import it.polito.utils.NullRequestException;
 import it.polito.utils.UnauthorizedException;
 import it.polito.utils.Utilities;
@@ -14,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.util.concurrent.ConcurrentHashMap;
 
 /***
@@ -73,14 +75,14 @@ public class UsersDatabaseInteractions {
         if (req == null)
             throw (new NullRequestException());
 
-        if (users.isEmpty())
-            loadUsers(Utilities.FILE_PATH, sc);
-
+        SQLUserDAO DBuser = new SQLUserDAO();
         ObjectMapper mapper = new ObjectMapper();
         UserValue requestingUserCredentials = mapper.readValue(req.getReader(), UserValue.class);
+        User requestUser = new User(requestingUserCredentials, false);
+        Connection c = (Connection) sc.getAttribute("DBConnection");
 
         //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
-        if (!isAuthorized(requestingUserCredentials.getUsername(), requestingUserCredentials.getPassword()))
+        if (!DBuser.login(c , requestUser))
             throw new UnauthorizedException();
         else {
             //Devo settare l'attributo "user" nella sessione

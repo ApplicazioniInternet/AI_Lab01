@@ -12,4 +12,9 @@
         <filter-name>Filter</filter-name>
         <url-pattern>/</url-pattern>
     </filter-mapping>
+    <listener>
+        <listener-class>
+            it.polito.listeners.ContextListener
+        </listener-class>
+    </listener>
 </web-app>

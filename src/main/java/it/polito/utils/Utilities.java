@@ -11,6 +11,9 @@ public class Utilities {
     public static final double MAX_SPEED = 100;
     public static final String FILE_PATH = "./WEB-INF/uploads/users.txt";
     public static final String encAlgorithm = "SHA-256";
+    public static final String urlDB  = "jdbc:postgresql:@127.0.0.1:5432:LabAI";
+    public static final String DBuser = "bugged_group";
+    public static final String DBpwd  = "bugged_group";
 
     public static byte[] sha256(String str1, String str2) throws NoSuchAlgorithmException {
         // Se non c'è la possibilità di applicare l'algoritmo, cavoli suoi
