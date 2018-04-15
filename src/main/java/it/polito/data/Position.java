@@ -1,56 +1,37 @@
 package it.polito.data;
 
-/***
- * Classe che serve a salvare tutte le informazioni per una singola posizione. Contiene:
- *      - latitudine
- *      - longitudine
- *      - timestamp
- */
 public class Position {
-    private PositionValue position;
-
-    public Position(double lat, double lon, long time){
-        this.position = new PositionValue();
-        this.position.setLatitude(lat);
-        this.position.setLongitude(lon);
-        this.position.setTimestamp(time);
-    }
-
-    public Position(PositionValue pos) {
-        this.position = pos;
-    }
+    private double latitude;
+    private double longitude;
+    private long timestamp;
 
     public double getLatitude() {
-        return this.position.getLatitude();
+        return latitude;
     }
 
-    public void setLatitude(double lat) {
-        this.position.setLatitude(lat);
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public double getLongitude() {
-        return this.position.getLongitude();
+        return longitude;
     }
 
-    public void setLongitude(double lon) {
-        this.position.setLongitude(lon);
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public long getTimestamp() {
-        return this.position.getTimestamp();
-    }
+    public long getTimestamp() { return timestamp; }
 
-    public void setTimestamp(long time) {
-        this.position.setTimestamp(time);
-    }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
     /*
-        Questa funzione ci è utile per calcolare la distanza tra me e una posizione
-        passataci come parametro.
+    Questa funzione ci è utile per calcolare la distanza tra me e una posizione
+    passataci come parametro.
      */
     public double getDistanceFrom(Position p) {
-        return Haversine.distance(this.position.getLatitude(),
-                this.position.getLongitude(),
+        return Haversine.distance(this.latitude,
+                this.longitude,
                 p.getLatitude(),
                 p.getLongitude()
         );

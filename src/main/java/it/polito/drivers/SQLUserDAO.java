@@ -25,7 +25,7 @@ public class SQLUserDAO implements UserDAO {
                 // assumiamo che username sia unico e la password sia già salvata criptata
                 if (rs.next()) {
                     pwd = rs.getString(1);
-                    if (pwd.compareTo(new String(u.getPassword(), StandardCharsets.UTF_8)) == 0)
+                    if (pwd.compareTo(new String(u.getDigestPassword(), StandardCharsets.UTF_8)) == 0)
                         result = true;
                 }
                 if(rs!=null)

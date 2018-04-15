@@ -2,7 +2,6 @@ package it.polito.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.Position;
-import it.polito.data.PositionValue;
 import it.polito.utils.InvalidPositionException;
 import it.polito.utils.NullRequestException;
 import it.polito.utils.Utilities;
@@ -105,16 +104,15 @@ public class PositionsDatabaseInteractions {
         String userName = (String) session.getAttribute("user");
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
-        PositionValue postedPosition = mapper.readValue(req.getReader(), PositionValue.class); // BOOM...! Non ho capito come fa a riempirla da sola però :'(
-        Position newPos = new Position(postedPosition);
+        Position postedPosition = mapper.readValue(req.getReader(), Position.class); // BOOM...! Non ho capito come fa a riempirla da sola però :'(
 
         long maxTimestamp = (System.currentTimeMillis() / 1000L);
 
         Position lastPos = getLastPositionUser(userName); // Prendo l'ultima posizione inseritaci dallo user
 
         if (lastPos != null) {
-            double distance = lastPos.getDistanceFrom(newPos); // Calcolo la distanza tra le due e poi la velocità
-            speed = (distance * 1000) / (newPos.getTimestamp() - lastPos.getTimestamp()) * 1000; // Perché il timestamp è in millisecondi!!! La formula ritorna i KM
+            double distance = lastPos.getDistanceFrom(postedPosition); // Calcolo la distanza tra le due e poi la velocità
+            speed = (distance * 1000) / (postedPosition.getTimestamp() - lastPos.getTimestamp()) * 1000; // Perché il timestamp è in millisecondi!!! La formula ritorna i KM
         }
 
         /**
@@ -134,7 +132,7 @@ public class PositionsDatabaseInteractions {
             throw new InvalidPositionException();
         } else {
             // Ora provo ad aggiungerla
-            addPosition(userName, newPos);
+            addPosition(userName, postedPosition);
         }
     }
 

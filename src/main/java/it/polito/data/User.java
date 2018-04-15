@@ -15,38 +15,51 @@ import java.util.Arrays;
  *      deciso di usare per salvarla in modo sicuro.
  */
 public class User {
-    private String userName;
+    private String username;
+    private String password;
     private byte[] digestPassword;
 
-    public User(UserValue u, boolean encoded) {
-        userName = u.getUsername();
+    public User(String username, String password, boolean encoded) {
+        this.username = username;
         try {
             if (!encoded)
-                digestPassword = Utilities.sha256(u.getUsername(), u.getPassword());
+                digestPassword = Utilities.sha256(username, password);
             else
-                digestPassword = u.getPassword().getBytes(StandardCharsets.UTF_8);
+                digestPassword = password.getBytes(StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException e) {
             // La salvo come password normale se non esistesse l'algoritmo
-            this.digestPassword = u.getPassword().getBytes(StandardCharsets.UTF_8);
+            this.digestPassword = password.getBytes(StandardCharsets.UTF_8);
         }
     }
 
-    public String getUsername() {
-        return this.userName;
-    }
-
     public void setUsername(String username) {
-        this.setUsername(username);
+        this.username = username;
     }
 
-    public byte[] getPassword() {
-        return this.digestPassword;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDigestPassword(byte[] digestPassword) {
+        this.digestPassword = digestPassword;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public byte[] getDigestPassword() {
+        return digestPassword;
     }
 
     /*
-        Funzione per controllare se la password inserita è corretta
-        oppure no.
-     */
+                Funzione per controllare se la password inserita è corretta
+                oppure no.
+             */
     public boolean isPWdOk(String username, String pwd) {
         byte[] digestSent;
         try {
