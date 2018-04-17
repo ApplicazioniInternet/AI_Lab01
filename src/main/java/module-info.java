@@ -3,4 +3,5 @@ module Lab01 {
     requires com.fasterxml.jackson.databind;
     requires javax.servlet.api;
     requires java.sql;
+    requires postgresql;
 }
