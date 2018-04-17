@@ -17,6 +17,7 @@
           <element id="library" level="project" name="Maven: org.opentest4j:opentest4j:1.0.0" />
           <element id="library" level="project" name="Maven: org.junit.platform:junit-platform-commons:1.0.0" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:8.0.9-rc" />
+          <element id="library" level="project" name="Maven: org.postgresql:postgresql:42.2.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
