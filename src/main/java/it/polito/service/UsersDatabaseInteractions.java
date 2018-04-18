@@ -53,10 +53,9 @@ public class UsersDatabaseInteractions {
         SQLUserDAO DBuser = new SQLUserDAO();
         ObjectMapper mapper = new ObjectMapper();
         User requestUser = mapper.readValue(req.getReader(), User.class);
-        Connection c = (Connection) sc.getAttribute("DBConnection");
 
         //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
-        if (!DBuser.login(c , requestUser))
+        if (!DBuser.login(requestUser))
             throw new UnauthorizedException();
         else {
             //Devo settare l'attributo "user" nella sessione

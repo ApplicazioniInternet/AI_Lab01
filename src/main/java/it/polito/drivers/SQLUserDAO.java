@@ -10,12 +10,14 @@ import java.sql.Statement;
 
 public class SQLUserDAO implements UserDAO {
 
-    public boolean login(Connection c, User u) {
+    public boolean login(User u) {
+        Connection c = null;
         Statement s = null;
         ResultSet rs = null;
         boolean result = false;
         String pwd;
         try {
+            c = DBInterface.getConnectionDB();
             s = c.createStatement();
             rs = s.executeQuery("SELECT password FROM Contatti WHERE user = " + u.getUsername());
         } catch (SQLException e) {

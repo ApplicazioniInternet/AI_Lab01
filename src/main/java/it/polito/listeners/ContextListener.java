@@ -14,15 +14,13 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        ServletContext ctx = servletContextEvent.getServletContext();
-
         try {
-            Connection c = DBInterface.getDBInterface();
-            ctx.setAttribute("DBConnection", c);
+            Class.forName("org.postgresql.Driver");
             System.out.println("Database connection initialized for Application.");
-        } catch (SQLException e) {
-//            e.printStackTrace();
-            throw new RuntimeException();
+        }catch (ClassNotFoundException e){
+            throw new
+                    ExceptionInInitializerError(e);
+            //o invocare System.exit()
         }
     }
 

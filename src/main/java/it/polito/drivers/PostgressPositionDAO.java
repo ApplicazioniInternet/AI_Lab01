@@ -23,7 +23,7 @@ public class PostgressPositionDAO implements PositionDAO {
                 .append("VALUES (?, point(?,?), ?)");
 
         try {
-            ps = DBInterface.getDBInterface().prepareStatement(query.toString());
+            ps = DBInterface.getConnectionDB().prepareStatement(query.toString());
             //Utilizzando lo username come primary key, se ne deve garantire l'univocità
             ps.setString(1, username);
             ps.setDouble(2, p.getLatitude());
@@ -55,10 +55,10 @@ public class PostgressPositionDAO implements PositionDAO {
         try {
             if (username != null) {
                 query.append("WHERE userID = ?");
-                ps = DBInterface.getDBInterface().prepareStatement(query.toString());
+                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());
                 ps.setString(1, username);
             } else
-                ps = DBInterface.getDBInterface().prepareStatement(query.toString());
+                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());
 
             readAndProcessData(ps.executeQuery(), result);
         } catch (SQLException e) {
@@ -87,7 +87,7 @@ public class PostgressPositionDAO implements PositionDAO {
 
         try {
             if (username != null) {
-                ps = DBInterface.getDBInterface().prepareStatement(query.toString());
+                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());
                 ps.setString(1, username);
                 ps.setTimestamp(2, new Timestamp(before));
                 readAndProcessData(ps.executeQuery(), result);
@@ -118,7 +118,7 @@ public class PostgressPositionDAO implements PositionDAO {
 
         try {
             if (username != null) {
-                ps = DBInterface.getDBInterface().prepareStatement(query.toString());
+                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());
                 ps.setString(1, username);
                 ps.setTimestamp(2, new Timestamp(after));
                 readAndProcessData(ps.executeQuery(), result);
@@ -149,7 +149,7 @@ public class PostgressPositionDAO implements PositionDAO {
 
         try {
             if (username != null) {
-                ps = DBInterface.getDBInterface().prepareStatement(query.toString());
+                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());
                 ps.setString(1, username);
                 ps.setTimestamp(2, new Timestamp(before));
                 ps.setTimestamp(3, new Timestamp(after));

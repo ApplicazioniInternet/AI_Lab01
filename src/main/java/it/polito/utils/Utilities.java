@@ -9,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Utilities {
     public static final double MAX_SPEED = 100;
-    public static final String FILE_PATH = "./WEB-INF/uploads/users.txt";
     public static final String encAlgorithm = "SHA-256";
     public static final String urlDB  = "jdbc:postgresql:@127.0.0.1:5432:LabAI";
     public static final String DBuser = "bugged_group";
