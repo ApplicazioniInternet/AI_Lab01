@@ -2,7 +2,7 @@ package it.polito.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.User;
-import it.polito.drivers.SQLUserDAO;
+import it.polito.drivers.PostgressUserDAO;
 import it.polito.utils.NullRequestException;
 import it.polito.utils.UnauthorizedException;
 
@@ -10,7 +10,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
 
 /***
  * Questa classe contiene tutto ciò che è stato letto da file. Verrà utilizzata per potere autenticare
@@ -50,7 +49,7 @@ public class UsersDatabaseInteractions {
         if (req == null)
             throw (new NullRequestException());
 
-        SQLUserDAO DBuser = new SQLUserDAO();
+        PostgressUserDAO DBuser = new PostgressUserDAO();
         ObjectMapper mapper = new ObjectMapper();
         User requestUser = mapper.readValue(req.getReader(), User.class);
 

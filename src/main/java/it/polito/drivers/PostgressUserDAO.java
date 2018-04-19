@@ -3,23 +3,25 @@ package it.polito.drivers;
 import it.polito.data.User;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
-public class SQLUserDAO implements UserDAO {
+public class PostgressUserDAO implements UserDAO {
 
     public boolean login(User u) {
         Connection c = null;
-        Statement s = null;
+        PreparedStatement ps = null;
+        StringBuilder query = new StringBuilder();
         ResultSet rs = null;
         boolean result = false;
         String pwd;
+
+        query.append("SELECT password FROM Contatti WHERE user = ?");
+
         try {
             c = DBInterface.getConnectionDB();
-            s = c.createStatement();
-            rs = s.executeQuery("SELECT password FROM Contatti WHERE user = " + u.getUsername());
+            ps = c.prepareStatement(query.toString());
+            ps.setString(1, u.getUsername());
+            rs = ps.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -36,8 +38,8 @@ public class SQLUserDAO implements UserDAO {
                 throw new RuntimeException(e);
             }
             try {
-                if(s!=null)
-                    s.close();
+                if(ps!=null)
+                    ps.close();
             } catch(SQLException e) {
                 throw new RuntimeException(e);
             }
