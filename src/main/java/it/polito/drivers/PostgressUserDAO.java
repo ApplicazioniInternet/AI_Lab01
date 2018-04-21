@@ -15,7 +15,7 @@ public class PostgressUserDAO implements UserDAO {
         boolean result = false;
         String pwd;
 
-        query.append("SELECT password FROM Contatti WHERE user = ?");
+        query.append("SELECT hashedPassword FROM User WHERE userID = ?");
 
         try {
             c = DBInterface.getConnectionDB();
