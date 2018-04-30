@@ -2,6 +2,7 @@ package it.polito.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.Position;
+import it.polito.drivers.PostgressPositionDAO;
 import it.polito.utils.Constants;
 import it.polito.utils.InvalidPositionException;
 import it.polito.utils.NullRequestException;
@@ -34,7 +35,9 @@ import java.util.stream.Collectors;
  *                                  oppure tra diversi servlet
  */
 public class PositionsDatabaseInteractions {
-    private static ConcurrentHashMap<String, CopyOnWriteArrayList<Position>> positionDataBase = new ConcurrentHashMap<>();
+
+    private static PostgressPositionDAO DBpositions = new PostgressPositionDAO();
+
     private static PositionsDatabaseInteractions ourInstance = new PositionsDatabaseInteractions();
 
     private PositionsDatabaseInteractions() {
@@ -45,52 +48,15 @@ public class PositionsDatabaseInteractions {
     }
 
     /*
-        Due metodi:
-         1) newUser ha il compito di aggiungere un nuovo utente --> (caso di login)
-         2) deleteUser ha il compito di rimuovere un utente, con relativa lista --> (caso logout)
-     */
-    public static void newUser(String name) {
-        positionDataBase.put(name, new CopyOnWriteArrayList<Position>());
-    }
-
-    public static void deleteUser(String name) {
-        positionDataBase.remove(name);
-    }
-
-    /*
-        Funzione che aggiunge una posizione alla lista di posizioni di un utente. Si assume che l'utente qui
-        sia correttamente loggato, ma se non presente ancora nella mappa, viene creata una entry per lui.
-        Per essere valida, una posizione, deve essere tale che il tratto tra essa e
-        quella precedente non sia stato percorso a velocità superiore a 100 m/s.
-
-        ATTENZIONE: assumiamo che i dati siano stati controllati prima di essere passati qua.
-     */
-    public static void addPosition(String name, Position newPos) throws InvalidPositionException {
-        if (!positionDataBase.containsKey(name)) // Nuovo utente
-            newUser(name);
-
-        positionDataBase.get(name).add(newPos);
-    }
-
-    /*
         Funzione per prendere l'ultima posizione che ci è stata inserita da un certo utente
      */
     protected static Position getLastPositionUser(String name) {
-        if (!positionDataBase.containsKey(name)) {
-            positionDataBase.put(name, new CopyOnWriteArrayList<>());
-            return null;
-        }
-
-        int last = positionDataBase.get(name).size();
-        if (last == 0)
-            return null;
-
-        return positionDataBase.get(name).get(last - 1);
+        return DBpositions.getLastPosition(name).get(0);
     }
 
     /*
         Questa funzione è dove accade la vera magia della POST. Per mantenere il design pattern corretto,
-        il servlet non si deve occupare dell'allocazione di oggetti e cazzate varie, ci pensa questa funzione che
+        il servlet non si deve occupare dell'allocazione di oggetti, ci pensa questa funzione che
         ha coscienza della struttura dei dati (data layer).
      */
     public static void performPost(HttpServletRequest req) throws IOException, InvalidPositionException, NullRequestException {
@@ -102,7 +68,7 @@ public class PositionsDatabaseInteractions {
         String userName = (String) session.getAttribute("user");
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
-        Position postedPosition = mapper.readValue(req.getReader(), Position.class); // BOOM...! Non ho capito come fa a riempirla da sola però :'(
+        Position postedPosition = mapper.readValue(req.getReader(), Position.class);
 
         long maxTimestamp = (System.currentTimeMillis() / 1000L);
 
@@ -119,7 +85,7 @@ public class PositionsDatabaseInteractions {
          * controllo che il timestamp non sia inferiore al valore di quando abbaimo iniziato il progetto -> passato (si puù anche usare un vaalore più basso
          * controllo che il timestamp non sia maggiore al valore di quando faccio il controlllo -> futuro
          **/
-        if (speed > Utilities.MAX_SPEED ||
+        if (speed > Constants.MAX_SPEED ||
                 Double.compare(postedPosition.getLongitude(), Constants.validValueLowerBound) < 0 ||
                 Double.compare(postedPosition.getLongitude(), Constants.validValueUpperBound) > 0 ||
                 Double.compare(postedPosition.getLatitude(), Constants.validValueLowerBound) < 0 ||
@@ -130,14 +96,14 @@ public class PositionsDatabaseInteractions {
             throw new InvalidPositionException();
         } else {
             // Ora provo ad aggiungerla
-            addPosition(userName, postedPosition);
+            DBpositions.insert(userName, postedPosition);
         }
     }
 
     /*
         Qua è dove accade la magia della GET invece. Il motivo per cui esiste è lo stesso di prima. Qua ho deciso di considerare alcuni casi
         speciali:
-            - se c'è un parametro before ritorno la lista di solamente le posizioni prima di un certo timestamp
+            - se ci sono parametri before/after ritorno la lista di solamente le posizioni prima di un certo timestamp
             - se non esiste quel parametro ritorno la lista completa
      */
     public static void performGet(HttpServletRequest req, HttpServletResponse resp) throws NullRequestException, IOException {
@@ -156,24 +122,9 @@ public class PositionsDatabaseInteractions {
         if (afterAsString != null)
             after = Long.parseLong(afterAsString); // Prendo un eventuale timestamp limite
 
-        List<Position> positionsList = retrievePositions(userName, before, after); // Prendo la lista delle position richieste
+        List<Position> positionsList = DBpositions.findByTimestamp(userName, before, after); // Prendo la lista delle position richieste
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(resp.getWriter(), positionsList);
-    }
-
-    private static List<Position> retrievePositions(String name, long before, long after) {
-        if (before == 0) {
-            // Vuole ritornate tutte quante le posizioni
-            return new ArrayList<>(positionDataBase.get(name));
-        } else {
-            // C'è da controllare il timestamp
-            return positionDataBase.get(name).stream()
-                    .filter(
-                            p -> (p.getTimestamp() < before && p.getTimestamp() > after)
-                    )
-                    .distinct()
-                    .collect(Collectors.toList());
-        }
     }
 }

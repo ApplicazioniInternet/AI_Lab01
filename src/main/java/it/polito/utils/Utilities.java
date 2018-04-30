@@ -8,15 +8,9 @@ import java.security.NoSuchAlgorithmException;
  *  Questa è una classe che ha lo scopo di contenere tutte le macro o eventuali costanti del progetto.
  */
 public class Utilities {
-    public static final double MAX_SPEED = 100;
-    public static final String encAlgorithm = "SHA-256";
-    public static final String urlDB  = "jdbc:postgresql:@127.0.0.1:5432:LabAI";
-    public static final String DBuser = "bugged_group";
-    public static final String DBpwd  = "bugged_group";
-
     public static byte[] sha256(String str1, String str2) throws NoSuchAlgorithmException {
         // Se non c'è la possibilità di applicare l'algoritmo, cavoli suoi
-        MessageDigest digest = MessageDigest.getInstance(encAlgorithm);
+        MessageDigest digest = MessageDigest.getInstance(Constants.encAlgorithm);
         return digest.digest(xorInputData(str1.getBytes(StandardCharsets.UTF_8),
                 str2.getBytes(StandardCharsets.UTF_8)));
     }

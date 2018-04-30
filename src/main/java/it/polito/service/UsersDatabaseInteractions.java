@@ -23,23 +23,6 @@ public class UsersDatabaseInteractions {
     }
 
     /*
-        Funzione che ritorna uno user dato il suo nome.
-     */
-//    public static User getUser(String name) {
-//
-//        todo select user from db
-//    }
-
-    /*
-        Funzione che mi permette di aggiungere un nuovo user (quindi potenzialmente
-        la posso sfruttare poi per implementare anche un meccanismo di registrazione).
-     */
-    public static void putUser(String name, String pwd) {
-        User uv = new User(name, pwd, false);
-        //todo write sqlquery to insert user
-    }
-
-    /*
         Analogamente alla funzione in PositionsDatabaseInteractions
         Questa funzione è dove accade la vera magia della POST. Per mantenere il design pattern corretto,
         il servlet non si deve occupare dell'allocazione di oggetti e cazzate varie, ci pensa questa funzione che

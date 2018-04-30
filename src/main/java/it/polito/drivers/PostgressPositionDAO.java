@@ -16,7 +16,6 @@ public class PostgressPositionDAO implements PositionDAO {
     public void insert(String username, Position p) {
         Connection c = null;
         PreparedStatement ps = null;
-        //Prepared statement per evitare SQL injection
         StringBuilder query = new StringBuilder();
 
         query.append("INSERT INTO Position ")
@@ -33,15 +32,13 @@ public class PostgressPositionDAO implements PositionDAO {
             ps.setLong(4, p.getTimestamp());
             ps.executeUpdate();
         } catch (SQLException e) {
-            //Più che rilanciare l'eccezione non saprei cosa fare
             throw new RuntimeException(e);
         } finally {
             try {
                 if (ps != null)
                     ps.close();
             } catch (SQLException e) {
-                //Più che rilanciare l'eccezione non saprei cosa fare
-                throw new RuntimeException(e);
+                    throw new RuntimeException(e);
             }
             try {
                 if (c != null)
@@ -53,114 +50,27 @@ public class PostgressPositionDAO implements PositionDAO {
     }
 
     @Override
-    public List<Position> findAll(String username) {
+    public List<Position> getLastPosition(String username) {
         Connection c = null;
         PreparedStatement ps = null;
         List<Position> result = new ArrayList<Position>();
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT * FROM Position ");
+        query.append("SELECT * FROM Position W WHERE userID = ? ORDER BY timestamp DESC LIMIT 1");
 
         try {
-            if (username != null) {
-                query.append("WHERE userID = ?");
-                c = DBInterface.getConnectionDB();
-                ps = c.prepareStatement(query.toString());
-                ps.setString(1, username);
-            } else {
-                c = DBInterface.getConnectionDB();
-                ps = c.prepareStatement(query.toString());
-            }
-
+            c = DBInterface.getConnectionDB();
+            ps = c.prepareStatement(query.toString());
+            ps.setString(1, username);
             readAndProcessData(ps.executeQuery(), result);
         } catch (SQLException e) {
-            //Più che rilanciare l'eccezione non saprei cosa fare
             throw new RuntimeException(e);
         } finally {
             try {
                 if (ps != null)
                     ps.close();
             } catch (SQLException e) {
-                //Più che rilanciare l'eccezione non saprei cosa fare
-                throw new RuntimeException(e);
-            }
-            try {
-                if (c != null)
-                    c.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public List<Position> findByBefore(String username, long before) {
-        Connection c = null;
-        PreparedStatement ps = null;
-        List<Position> result = new ArrayList<Position>();
-        StringBuilder query = new StringBuilder();
-
-        query.append("SELECT * FROM Position ")
-                .append("WHERE userID = ? AND timestamp < ?");
-
-        try {
-            if (username != null) {
-                c = DBInterface.getConnectionDB();
-                ps = c.prepareStatement(query.toString());
-                ps.setString(1, username);
-                ps.setLong(2, before);
-                readAndProcessData(ps.executeQuery(), result);
-            }
-        } catch (SQLException e) {
-            //Più che rilanciare l'eccezione non saprei cosa fare
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException e) {
-                //Più che rilanciare l'eccezione non saprei cosa fare
-                throw new RuntimeException(e);
-            }
-            try {
-                if (c != null)
-                    c.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public List<Position> findByAfter(String username, long after) {
-        Connection c = null;
-        PreparedStatement ps = null;
-        List<Position> result = new ArrayList<Position>();
-        StringBuilder query = new StringBuilder();
-
-        query.append("SELECT * FROM Position ")
-                .append("WHERE userID = ? AND timestamp > ?");
-
-        try {
-            if (username != null) {
-                c = DBInterface.getConnectionDB();
-                ps = c.prepareStatement(query.toString());
-                ps.setString(1, username);
-                ps.setLong(2, after);
-                readAndProcessData(ps.executeQuery(), result);
-            }
-        } catch (SQLException e) {
-            //Più che rilanciare l'eccezione non saprei cosa fare
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (SQLException e) {
-                //Più che rilanciare l'eccezione non saprei cosa fare
-                throw new RuntimeException(e);
+                    throw new RuntimeException(e);
             }
             try {
                 if (c != null)
@@ -192,15 +102,13 @@ public class PostgressPositionDAO implements PositionDAO {
                 readAndProcessData(ps.executeQuery(), result);
             }
         } catch (SQLException e) {
-            //Più che rilanciare l'eccezione non saprei cosa fare
             throw new RuntimeException(e);
         } finally {
             try {
                 if (ps != null)
                     ps.close();
             } catch (SQLException e) {
-                //Più che rilanciare l'eccezione non saprei cosa fare
-                throw new RuntimeException(e);
+                    throw new RuntimeException(e);
             }
             try {
                 if (c != null)
