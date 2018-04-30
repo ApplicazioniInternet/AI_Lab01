@@ -11,12 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="eeebba8d-c3fa-4a82-8038-e29f9ddabf56" name="Default" comment="Aggiunto DAO e interfaccia per Position">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressPositionDAO.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressPositionDAO.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressUserDAO.java" afterPath="$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressUserDAO.java" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/drivers/DBInterface.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/drivers/SQLUserDAO.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/drivers/UserDAO.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/target/classes/it/polito/listeners/ContextListener.class" afterPath="" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -29,14 +23,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PostgressPositionDAO.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PostgressPositionDAO.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressPositionDAO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2295">
-              <caret line="143" column="8" lean-forward="false" selection-start-line="143" selection-start-column="8" selection-end-line="143" selection-end-column="8" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="17">
+              <caret line="175" column="41" lean-forward="false" selection-start-line="175" selection-start-column="26" selection-end-line="175" selection-end-column="41" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -44,7 +36,7 @@
       <file leaf-file-name="UsersDatabaseInteractions.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/service/UsersDatabaseInteractions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="714">
               <caret line="53" column="37" lean-forward="false" selection-start-line="53" selection-start-column="37" selection-end-line="53" selection-end-column="37" />
               <folding>
                 <element signature="e#766#767#0" expanded="true" />
@@ -57,7 +49,7 @@
       <file leaf-file-name="UserDAO.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/drivers/UserDAO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="85">
               <caret line="7" column="25" lean-forward="false" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -66,11 +58,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PostgressUserDAO.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PostgressUserDAO.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressUserDAO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="221">
+              <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -95,8 +87,10 @@
       <find>Connection</find>
       <find>InvalidPosition</find>
       <find>ourInstance</find>
-      <find>readAndProcessData</find>
       <find>findAll</find>
+      <find>readAndProcessData</find>
+      <find>package it.polito.drivers;import it.polito.data.Position;import org.postgresql.geometric.PGpoint;import java.sql.Connection;import java.sql.PreparedStatement;import java.sql.ResultSet;import java.sql.SQLException;import java.util.ArrayList;import java.util.List;public class PostgressPositionDAO implements PositionDAO {    @Override    public void insert(String username, Position p) {        Connection c = null;        PreparedStatement ps = null;        //Prepared statement per evitare SQL injection        StringBuilder query = new StringBuilder();        query.append(&quot;INSERT INTO Position &quot;)                .append(&quot;(userID, pos, timestamp) &quot;)                .append(&quot;VALUES (?, point(?,?), ?)&quot;);        try {            c = DBInterface.getConnectionDB();            ps = c.prepareStatement(query.toString());            //Utilizzando lo username come primary key, se ne deve garantire l'univocità            ps.setString(1, username);            ps.setDouble(2, p.getLatitude());            ps.setDouble(3, p.getLongitude());            ps.setLong(4, p.getTimestamp());            ps.executeUpdate();        } catch (SQLException e) {            //Più che rilanciare l'eccezione non saprei cosa fare            throw new RuntimeException(e);        } finally {            try {                if (ps != null)                    ps.close();            } catch (SQLException e) {                //Più che rilanciare l'eccezione non saprei cosa fare                throw new RuntimeException(e);            }            try {                if (c != null)                    c.close();            } catch (SQLException e) {                throw new RuntimeException(e);            }        }    }    @Override    public List&lt;Position&gt; findAll(String username) {        Connection c = null;        PreparedStatement ps = null;        List&lt;Position&gt; result = new ArrayList&lt;Position&gt;();        StringBuilder query = new StringBuilder();        if (username != null) {            try {                query.append(&quot;SELECT * FROM Position &quot;);                query.append(&quot;WHERE userID = ?&quot;);                c = DBInterface.getConnectionDB();                ps = c.prepareStatement(query.toString());                ps.setString(1, username);&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD            } else {                c = DBInterface.getConnectionDB();                ps = c.prepareStatement(query.toString());            }=======&gt;&gt;&gt;&gt;&gt;&gt;&gt; query fixed                readAndProcessData(ps.executeQuery(), result);            } catch (SQLException e) {                //Più che rilanciare l'eccezione non saprei cosa fare                throw new RuntimeException(e);            } finally {                try {                    if (ps != null)                        ps.close();                } catch (SQLException e) {                    //Più che rilanciare l'eccezione non saprei cosa fare                    throw new RuntimeException(e);                }            }            try {                if (c != null)                    c.close();            } catch (SQLException e) {                throw new RuntimeException(e);            }        }        return result;    }    @Override    public List&lt;Position&gt; findByBefore(String username, long before) {        Connection c = null;        PreparedStatement ps = null;        List&lt;Position&gt; result = new ArrayList&lt;Position&gt;();        StringBuilder query = new StringBuilder();        try {            if (username != null) {&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD                c = DBInterface.getConnectionDB();                ps = c.prepareStatement(query.toString());=======                query.append(&quot;SELECT * FROM Position &quot;)                        .append(&quot;WHERE userID = ? AND timestamp &lt; ?&quot;);                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());&gt;&gt;&gt;&gt;&gt;&gt;&gt; query fixed                ps.setString(1, username);                ps.setLong(2, before);                readAndProcessData(ps.executeQuery(), result);            }        } catch (SQLException e) {            //Più che rilanciare l'eccezione non saprei cosa fare            throw new RuntimeException(e);        } finally {            try {                if (ps != null)                    ps.close();            } catch (SQLException e) {                //Più che rilanciare l'eccezione non saprei cosa fare                throw new RuntimeException(e);            }            try {                if (c != null)                    c.close();            } catch (SQLException e) {                throw new RuntimeException(e);            }        }        return result;    }    @Override    public List&lt;Position&gt; findByAfter(String username, long after) {        Connection c = null;        PreparedStatement ps = null;        List&lt;Position&gt; result = new ArrayList&lt;Position&gt;();        StringBuilder query = new StringBuilder();        try {            if (username != null) {&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD                c = DBInterface.getConnectionDB();                ps = c.prepareStatement(query.toString());=======                query.append(&quot;SELECT * FROM Position &quot;)                        .append(&quot;WHERE userID = ? AND timestamp &gt; ?&quot;);                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());&gt;&gt;&gt;&gt;&gt;&gt;&gt; query fixed                ps.setString(1, username);                ps.setLong(2, after);                readAndProcessData(ps.executeQuery(), result);            }        } catch (SQLException e) {            //Più che rilanciare l'eccezione non saprei cosa fare            throw new RuntimeException(e);        } finally {            try {                if (ps != null)                    ps.close();            } catch (SQLException e) {                //Più che rilanciare l'eccezione non saprei cosa fare                throw new RuntimeException(e);            }            try {                if (c != null)                    c.close();            } catch (SQLException e) {                throw new RuntimeException(e);            }        }        return result;    }    @Override    public List&lt;Position&gt; findByTimestamp(String username, long before, long after) {        Connection c = null;        PreparedStatement ps = null;        List&lt;Position&gt; result = new ArrayList&lt;Position&gt;();        StringBuilder query = new StringBuilder();        try {            if (username != null) {&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD                c = DBInterface.getConnectionDB();                ps = c.prepareStatement(query.toString());=======                query.append(&quot;SELECT * FROM Position &quot;)                        .append(&quot;WHERE userID = ? AND timestamp &lt; ? AND timestamp &gt; ?&quot;);                ps = DBInterface.getConnectionDB().prepareStatement(query.toString());&gt;&gt;&gt;&gt;&gt;&gt;&gt; query fixed                ps.setString(1, username);                ps.setLong(2, before);                ps.setLong(3, after);                readAndProcessData(ps.executeQuery(), result);            }        } catch (SQLException e) {            //Più che rilanciare l'eccezione non saprei cosa fare            throw new RuntimeException(e);        } finally {            try {                if (ps != null)                    ps.close();            } catch (SQLException e) {                //Più che rilanciare l'eccezione non saprei cosa fare                throw new RuntimeException(e);            }            try {                if (c != null)                    c.close();            } catch (SQLException e) {                throw new RuntimeException(e);            }        }        return result;    }    private void readAndProcessData(ResultSet rs, List&lt;Position&gt; l) {        try {            //Leggo ogni riga ritornata, creo la Position e la aggiungo alla lista            while (rs.next()) {                PGpoint point = (PGpoint) rs.getObject(&quot;pos&quot;);                long timestamp = rs.getLong(&quot;timestamp&quot;);                Position p = new Position();                p.setLatitude(point.x);                p.setLongitude(point.y);                p.setTimestamp(timestamp);                l.add(p);            }        } catch (SQLException e) {            throw new RuntimeException(e);        } finally {            try {                rs.close();            } catch (SQLException e) {                throw new RuntimeException(e);            }        }    }}</find>
+      <find>findByTimestamp</find>
     </findStrings>
     <replaceStrings>
       <replace>insance</replace>
@@ -222,134 +216,14 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
               <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="drivers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="filters" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="listeners" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="service" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="servlets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="polito" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="webapp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="webapp" type="462c0819:PsiDirectoryNode" />
-              <item name="WEB-INF" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AI_Lab01" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="webapp" type="462c0819:PsiDirectoryNode" />
-              <item name="WEB-INF" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="AI_Lab01" type="b2602c69:ProjectViewProjectNode" />
@@ -361,8 +235,6 @@
       </pane>
       <pane id="PackagesPane" />
       <pane id="AndroidView" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -798,6 +670,7 @@
       <workItem from="1523955135176" duration="6959000" />
       <workItem from="1524154589660" duration="2294000" />
       <workItem from="1524309681496" duration="311000" />
+      <workItem from="1525075027004" duration="711000" />
     </task>
     <task id="LOCAL-00001" summary="Versione 0.1 del 22/03/2018">
       <created>1521753958782</created>
@@ -901,7 +774,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88604000" />
+    <option name="totallyTimeSpent" value="89694000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -914,7 +787,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="44" y="40" width="1366" height="746" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -927,10 +799,10 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25040916" sideWeight="0.50572246" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.59247136" sideWeight="0.49427754" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32569557" sideWeight="0.49427754" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32569557" sideWeight="0.49427754" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27760968" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28214827" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1252,7 +1124,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="33" column="26" lean-forward="false" selection-start-line="33" selection-start-column="26" selection-end-line="33" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1319,25 +1190,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-493">
           <caret line="34" column="13" lean-forward="false" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressPositionDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2295">
-          <caret line="143" column="8" lean-forward="false" selection-start-line="143" selection-start-column="8" selection-end-line="143" selection-end-column="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="17">
+          <caret line="175" column="41" lean-forward="false" selection-start-line="175" selection-start-column="26" selection-end-line="175" selection-end-column="41" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/service/UsersDatabaseInteractions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="714">
           <caret line="53" column="37" lean-forward="false" selection-start-line="53" selection-start-column="37" selection-end-line="53" selection-end-column="37" />
           <folding>
             <element signature="e#766#767#0" expanded="true" />
@@ -1348,7 +1214,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/drivers/UserDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
+        <state relative-caret-position="85">
           <caret line="7" column="25" lean-forward="false" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1358,8 +1224,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/it/polito/drivers/PostgressUserDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+        <state relative-caret-position="221">
+          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
