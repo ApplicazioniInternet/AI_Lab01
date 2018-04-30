@@ -43,14 +43,6 @@ public class GeneralPurposeFilter implements Filter{
                 // L'utente non si è ancora loggato, quindi devo redirigerlo al servlet di login
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
-            }else{
-                // L'utente è autenticato controllo se si vuole sloggare e in caso lo redirigo al servlet per il logout
-                if (req.getParameter("logout") != null) {
-                    // Senza redirigerlo posso benissimo invalidare già qua la sessione e ritornare
-                    session.invalidate();
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    return; // <--- IMPORTANTE: devo ritornare dal metodo!
-                }
             }
 
             // Tutto ok, inoltra la richiesta al prossimo filtro oppure servlet destinatario
