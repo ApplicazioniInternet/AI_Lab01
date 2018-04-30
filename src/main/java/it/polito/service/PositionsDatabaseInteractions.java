@@ -2,6 +2,7 @@ package it.polito.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.Position;
+import it.polito.utils.Constants;
 import it.polito.utils.InvalidPositionException;
 import it.polito.utils.NullRequestException;
 import it.polito.utils.Utilities;
@@ -35,9 +36,6 @@ import java.util.stream.Collectors;
 public class PositionsDatabaseInteractions {
     private static ConcurrentHashMap<String, CopyOnWriteArrayList<Position>> positionDataBase = new ConcurrentHashMap<>();
     private static PositionsDatabaseInteractions ourInstance = new PositionsDatabaseInteractions();
-    private static double validValueLowerBound = -180;
-    private static double validValueUpperBound = 180;
-    private static long minTimestamp = 1522000000;
 
     private PositionsDatabaseInteractions() {
     }
@@ -122,11 +120,11 @@ public class PositionsDatabaseInteractions {
          * controllo che il timestamp non sia maggiore al valore di quando faccio il controlllo -> futuro
          **/
         if (speed > Utilities.MAX_SPEED ||
-                Double.compare(postedPosition.getLongitude(), validValueLowerBound) < 0 ||
-                Double.compare(postedPosition.getLongitude(), validValueUpperBound) > 0 ||
-                Double.compare(postedPosition.getLatitude(), validValueLowerBound) < 0 ||
-                Double.compare(postedPosition.getLatitude(), validValueUpperBound) > 0 ||
-                Long.compare(postedPosition.getTimestamp(), minTimestamp) < 0 ||
+                Double.compare(postedPosition.getLongitude(), Constants.validValueLowerBound) < 0 ||
+                Double.compare(postedPosition.getLongitude(), Constants.validValueUpperBound) > 0 ||
+                Double.compare(postedPosition.getLatitude(), Constants.validValueLowerBound) < 0 ||
+                Double.compare(postedPosition.getLatitude(), Constants.validValueUpperBound) > 0 ||
+                Long.compare(postedPosition.getTimestamp(), Constants.minTimestamp) < 0 ||
                 Long.compare(postedPosition.getTimestamp(), maxTimestamp) > 0) {
             // Non vengono soddisfatti i requisiti quindi tiro un'exception
             throw new InvalidPositionException();

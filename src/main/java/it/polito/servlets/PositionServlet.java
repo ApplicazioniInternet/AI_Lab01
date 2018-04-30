@@ -4,7 +4,6 @@ import it.polito.service.PositionsDatabaseInteractions;
 import it.polito.utils.InvalidPositionException;
 import it.polito.utils.NullRequestException;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +16,14 @@ import java.io.IOException;
  */
 @WebServlet(urlPatterns = "/")
 public class PositionServlet extends HttpServlet{
-    private static final PositionsDatabaseInteractions db = PositionsDatabaseInteractions.getInstance();
+    private final PositionsDatabaseInteractions db = PositionsDatabaseInteractions.getInstance();
 
     /*
         200 -> tutto ok
         204 -> la richiesta aveva null content
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try{
             db.performGet(req, resp);
 
@@ -44,7 +43,7 @@ public class PositionServlet extends HttpServlet{
         204 -> richiesta con null content
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
             try {
                 db.performPost(req);
 
