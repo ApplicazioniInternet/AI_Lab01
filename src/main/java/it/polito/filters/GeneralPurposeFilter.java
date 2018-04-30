@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 /**
  * Filtro che fa un po' di tutto. Principalmente controlla che lo user sia già stato autenticato, prima di potere
@@ -40,25 +39,22 @@ public class GeneralPurposeFilter implements Filter{
             resp = (HttpServletResponse) servletResponse;
             HttpSession session = req.getSession();
 
-            if(session.getAttribute("user") == null /*&& !session.getAttribute("logout").equals("true")*/){
+            if (session.getAttribute("user") == null) {
                 // L'utente non si è ancora loggato, quindi devo redirigerlo al servlet di login
-                String newUrl = req.getRequestURI() + "/login";
-                resp.sendRedirect(newUrl);
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }else{
                 // L'utente è autenticato controllo se si vuole sloggare e in caso lo redirigo al servlet per il logout
-                if(session.getAttribute("logout").equals("true")){
-                    String newUrl = req.getRequestURI() + "/logout";
-                    resp.sendRedirect(newUrl);
-                }else{
-                    // L'utente è autenticato e vuole fare delle operazioni. Controllo il contentType e che tipo di richiesta è.
-                    if(!(req.getContentType().equals("application/json") && req.getMethod().equals("POST"))){
-                        // Non posso capire il messaggio, quindi chiudo qua la comunicazione
-                        resp.reset();
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        return;
-                    }
+                if (req.getParameter("logout") != null) {
+                    // Senza redirigerlo posso benissimo invalidare già qua la sessione e ritornare
+                    session.invalidate();
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    return; // <--- IMPORTANTE: devo ritornare dal metodo!
                 }
             }
+
+            // Tutto ok, inoltra la richiesta al prossimo filtro oppure servlet destinatario
+            filterChain.doFilter(req, resp);
         }
     }
 

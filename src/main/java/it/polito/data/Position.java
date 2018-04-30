@@ -1,50 +1,39 @@
 package it.polito.data;
 
-/***
- * Classe che serve a salvare tutte le informazioni per una singola posizione. Contiene:
- *      - latitudine
- *      - longitudine
- *      - timestamp
- */
 public class Position {
-    private double lat, lon;
+    private double latitude;
+    private double longitude;
     private long timestamp;
 
-    public Position(double lat, double lon, long time) {
-        this.lat = lat;
-        this.lon = lon;
-        this.timestamp = time;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public double getLat() {
-        return lat;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public double getLon() {
-        return lon;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
+    public long getTimestamp() { return timestamp; }
 
-    public long getTime() {
-        return timestamp;
-    }
-
-    public void setTime(long time) {
-        this.timestamp = time;
-    }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
     /*
-        Questa funzione ci è utile per calcolare la distanza tra me e una posizione
-        passataci come parametro.
+    Questa funzione ci è utile per calcolare la distanza tra me e una posizione
+    passataci come parametro.
      */
-    public double getDistanceFrom(Position p){
-        return Haversine.distance(this.lat, this.lon, p.getLat(), p.getLon());
+    public double getDistanceFrom(Position p) {
+        return Haversine.distance(this.latitude,
+                this.longitude,
+                p.getLatitude(),
+                p.getLongitude()
+        );
     }
 }
