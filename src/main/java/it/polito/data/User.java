@@ -57,9 +57,9 @@ public class User {
     }
 
     /*
-                Funzione per controllare se la password inserita è corretta
-                oppure no.
-             */
+        Funzione per controllare se la password inserita è corretta
+        oppure no.
+     */
     public boolean isPWdOk(String username, String pwd) {
         byte[] digestSent;
         try {
@@ -68,5 +68,9 @@ public class User {
             return Arrays.equals(this.digestPassword, pwd.getBytes(StandardCharsets.UTF_8));
         }
         return Arrays.equals(this.digestPassword, digestSent);
+    }
+
+    public String toString() {
+        return this.username + "," + this.password + "," + this.digestPassword.toString();
     }
 }

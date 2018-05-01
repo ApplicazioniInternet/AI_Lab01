@@ -28,13 +28,16 @@ public class UsersDatabaseInteractions {
         il servlet non si deve occupare dell'allocazione di oggetti e cazzate varie, ci pensa questa funzione che
         ha coscienza della struttura dei dati (data layer).
      */
-    public static void performPost(HttpServletRequest req, ServletContext sc) throws IOException, NullRequestException, UnauthorizedException {
-        if (req == null)
-            throw (new NullRequestException());
+    public static void performPost(HttpServletRequest req, ServletContext sc) throws IOException,
+            NullRequestException, UnauthorizedException {
+
+        if (req == null) throw (new NullRequestException());
 
         PostgressUserDAO DBuser = new PostgressUserDAO();
         ObjectMapper mapper = new ObjectMapper();
         User requestUser = mapper.readValue(req.getReader(), User.class);
+
+        System.out.println(requestUser.toString());
 
         //Questa eccezione dovrebbe ritornare automaticamente al client un codice 401 unauthorize
         if (!DBuser.login(requestUser))

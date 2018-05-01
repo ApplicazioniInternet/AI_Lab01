@@ -20,7 +20,7 @@ public class PostgressPositionDAO implements PositionDAO {
 
         query.append("INSERT INTO Position ")
                 .append("(userID, pos, timestamp) ")
-                .append("VALUES (?, point(?,?), ?)");
+                .append("VALUES (?, (?,?), ?)");
 
         try {
             c = DBInterface.getConnectionDB();

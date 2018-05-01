@@ -9,4 +9,25 @@ public class Constants {
     public static final String urlDB  = "jdbc:postgresql:@127.0.0.1:5432:LabAI";
     public static final String DBuser = "bugged_group";
     public static final String DBpwd  = "bugged_group";
+    public static final String DBname = "LabAI";
+
+    /* *
+    *
+    * docker volume create lab2
+    *
+    * docker run --name=postgis -d
+    * -e POSTGRES_USER=bugged_group
+    * -e POSTGRES_PASS=bugged_group
+    * -e POSTGRES_DBNAME=LabAI
+    * -e ALLOW_IP_RANGE=0.0.0.0/0
+    * -p 5432:5432
+    * -v lab2:/var/lib/postgresql
+    * --restart=always
+    * kartoza/postgis:9.6-2.4
+    *
+    * pinco - computer1
+    * pallino - computer2
+    *
+    * */
+
 }

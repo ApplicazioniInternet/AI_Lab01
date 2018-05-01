@@ -2,6 +2,7 @@ package it.polito.drivers;
 
 import it.polito.data.User;
 
+import javax.servlet.ServletContext;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
@@ -21,6 +22,9 @@ public class PostgressUserDAO implements UserDAO {
             c = DBInterface.getConnectionDB();
             ps = c.prepareStatement(query.toString());
             ps.setString(1, u.getUsername());
+
+            System.out.println(query);
+
             rs = ps.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -32,19 +36,19 @@ public class PostgressUserDAO implements UserDAO {
                     if (pwd.compareTo(new String(u.getDigestPassword(), StandardCharsets.UTF_8)) == 0)
                         result = true;
                 }
-                if(rs!=null)
+                if(rs != null)
                     rs.close();
             } catch(SQLException e) {
                 throw new RuntimeException(e);
             }
             try {
-                if(ps!=null)
+                if(ps != null)
                     ps.close();
             } catch(SQLException e) {
                 throw new RuntimeException(e);
             }
             try {
-                if(c!=null)
+                if(c != null)
                     c.close();
             } catch(SQLException e) {
                 throw new RuntimeException(e);
@@ -53,4 +57,3 @@ public class PostgressUserDAO implements UserDAO {
         return result;
     }
 }
-
