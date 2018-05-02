@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static jdk.internal.jline.internal.Log.debug;
+
 /***
  * Web Servlet per fare il login di uno user. Deve controllare che lo user esista nel database
  * e che le sue credenziali siano corrette.
@@ -20,6 +22,9 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/login")
 public class LoginServlet extends HttpServlet{
+
+    private static final String TAG = "[LoginServlet] ";
+
     private static final UsersDatabaseInteractions dbUser = UsersDatabaseInteractions.getInstance();
 
     /*
@@ -31,6 +36,7 @@ public class LoginServlet extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try{
+
             dbUser.performPost(req, getServletContext());
 
             // Se sono qui significa che l'utente è stato autenticato con successo
@@ -46,6 +52,7 @@ public class LoginServlet extends HttpServlet{
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
         catch(IOException e){
+            log(TAG + e.getMessage());
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } catch (NullRequestException e) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

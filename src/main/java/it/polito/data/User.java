@@ -1,10 +1,12 @@
 package it.polito.data;
 
 import it.polito.utils.Utilities;
+import org.postgresql.core.Encoding;
 
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 
 /***
  * Questa classe è utilizzata per descrivere uno user. Contiene:
@@ -15,17 +17,21 @@ import java.util.Arrays;
  *      deciso di usare per salvarla in modo sicuro.
  */
 public class User {
-    private String username;
-    private String password;
-    private byte[] digestPassword;
+
+    private UserInfo userInfo;
+    public byte[] digestPassword;
+
+    public static User newUser(UserInfo ui){
+        return new User(ui.getUsername(), ui.getPassword(), false);
+    }
 
     public User(String username, String password, boolean encoded) {
-        this.username = username;
+        this.userInfo = new UserInfo(username, password);
         try {
             if (!encoded)
-                digestPassword = Utilities.sha256(username, password);
+                this.digestPassword = Utilities.sha256(username, password);
             else
-                digestPassword = password.getBytes(StandardCharsets.UTF_8);
+                this.digestPassword = password.getBytes(StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException e) {
             // La salvo come password normale se non esistesse l'algoritmo
             this.digestPassword = password.getBytes(StandardCharsets.UTF_8);
@@ -33,11 +39,11 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        userInfo.setUsername(username);
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        userInfo.setPassword(password);
     }
 
     public void setDigestPassword(byte[] digestPassword) {
@@ -45,15 +51,15 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return userInfo.getUsername();
     }
 
     public String getPassword() {
-        return password;
+        return userInfo.getPassword();
     }
 
     public byte[] getDigestPassword() {
-        return digestPassword;
+        return this.digestPassword;
     }
 
     /*
@@ -70,7 +76,11 @@ public class User {
         return Arrays.equals(this.digestPassword, digestSent);
     }
 
+    public boolean isPwdOk(String pwd){
+        return pwd.equals(Arrays.toString(digestPassword));
+    }
+
     public String toString() {
-        return this.username + "," + this.password + "," + this.digestPassword.toString();
+        return userInfo.getUsername() + "," + userInfo.getPassword() + "," + Arrays.toString(digestPassword);
     }
 }

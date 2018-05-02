@@ -2,6 +2,7 @@ package it.polito.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.data.Position;
+import it.polito.data.PositionValue;
 import it.polito.drivers.PostgressPositionDAO;
 import it.polito.utils.Constants;
 import it.polito.utils.InvalidPositionException;
@@ -51,7 +52,8 @@ public class PositionsDatabaseInteractions {
         Funzione per prendere l'ultima posizione che ci è stata inserita da un certo utente
      */
     protected static Position getLastPositionUser(String name) {
-        return DBpositions.getLastPosition(name).get(0);
+        List<Position> pos = DBpositions.getLastPosition(name);
+        return pos.isEmpty() ? null: pos.get(0);
     }
 
     /*
@@ -62,13 +64,14 @@ public class PositionsDatabaseInteractions {
     public static void performPost(HttpServletRequest req) throws IOException, InvalidPositionException, NullRequestException {
         double speed = 0;
 
-        if (req == null)
+        if (req == null || req.getReader().lines().count() == 0)
             throw (new NullRequestException());
         HttpSession session = req.getSession();
         String userName = (String) session.getAttribute("user");
 
         ObjectMapper mapper = new ObjectMapper(); // È la classe magica che ci permatte di leggere il JSON direttamente
-        Position postedPosition = mapper.readValue(req.getReader(), Position.class);
+        PositionValue postedPositionValue = mapper.readValue(req.getReader(), PositionValue.class);
+        Position postedPosition = new Position(postedPositionValue);
 
         long maxTimestamp = (System.currentTimeMillis() / 1000L);
 

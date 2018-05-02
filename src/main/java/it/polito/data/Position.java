@@ -1,37 +1,43 @@
 package it.polito.data;
 
 public class Position {
-    private double latitude;
-    private double longitude;
-    private long timestamp;
+    private PositionValue pv;
+
+    public Position(){
+        pv = new PositionValue();
+    }
+
+    public Position(PositionValue value){
+        this.pv = value;
+    }
 
     public double getLatitude() {
-        return latitude;
+        return pv.getLatitude();
     }
 
     public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        pv.setLatitude(latitude);
     }
 
     public double getLongitude() {
-        return longitude;
+        return pv.getLongitude();
     }
 
     public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        pv.setLongitude(longitude);
     }
 
-    public long getTimestamp() { return timestamp; }
+    public long getTimestamp() { return pv.getTimestamp(); }
 
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    public void setTimestamp(long timestamp) { pv.setTimestamp(timestamp); }
 
     /*
     Questa funzione ci è utile per calcolare la distanza tra me e una posizione
     passataci come parametro.
      */
     public double getDistanceFrom(Position p) {
-        return Haversine.distance(this.latitude,
-                this.longitude,
+        return Haversine.distance(pv.getLatitude(),
+                pv.getLongitude(),
                 p.getLatitude(),
                 p.getLongitude()
         );

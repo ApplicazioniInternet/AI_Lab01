@@ -4,4 +4,5 @@ module Lab01 {
     requires javax.servlet.api;
     requires java.sql;
     requires postgresql;
+    requires jdk.internal.le;
 }

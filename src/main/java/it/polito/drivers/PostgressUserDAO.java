@@ -16,43 +16,37 @@ public class PostgressUserDAO implements UserDAO {
         boolean result = false;
         String pwd;
 
-        query.append("SELECT hashedPassword FROM User WHERE userID = ?");
+        query.append("SELECT \"hashedPassword\" FROM \"User\" WHERE \"userID\" = ?");
 
         try {
             c = DBInterface.getConnectionDB();
             ps = c.prepareStatement(query.toString());
-            ps.setString(1, u.getUsername());
+            ps.setString(1,  u.getUsername());
 
-            System.out.println(query);
+            System.err.println(ps.toString());
 
             rs = ps.executeQuery();
+
+            if (rs.next()) {
+                pwd = rs.getString("hashedPassword");
+                if (u.isPwdOk(pwd))
+                    result = true;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             try {
-                // assumiamo che username sia unico e la password sia già salvata criptata
-                if (rs.next()) {
-                    pwd = rs.getString(1);
-                    if (pwd.compareTo(new String(u.getDigestPassword(), StandardCharsets.UTF_8)) == 0)
-                        result = true;
-                }
                 if(rs != null)
                     rs.close();
-            } catch(SQLException e) {
-                throw new RuntimeException(e);
-            }
+            } catch(SQLException e) { }
             try {
                 if(ps != null)
                     ps.close();
-            } catch(SQLException e) {
-                throw new RuntimeException(e);
-            }
+            } catch(SQLException e) { }
             try {
                 if(c != null)
                     c.close();
-            } catch(SQLException e) {
-                throw new RuntimeException(e);
-            }
+            } catch(SQLException e) { }
         }
         return result;
     }

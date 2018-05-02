@@ -11,17 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostgressPositionDAO implements PositionDAO {
-
+    private static final String TAG = "[PostgressPositionDAO] ";
     @Override
     public void insert(String username, Position p) {
         Connection c = null;
         PreparedStatement ps = null;
         StringBuilder query = new StringBuilder();
 
-        query.append("INSERT INTO Position ")
-                .append("(userID, pos, timestamp) ")
-                .append("VALUES (?, (?,?), ?)");
-
+        query.append("INSERT INTO \"Position\" ")
+                .append("(\"userID\", \"latitude\", \"longitude\", \"timestamp\") ")
+                .append("VALUES (?, ?, ?, ?)");
         try {
             c = DBInterface.getConnectionDB();
             ps = c.prepareStatement(query.toString());
@@ -30,6 +29,7 @@ public class PostgressPositionDAO implements PositionDAO {
             ps.setDouble(2, p.getLatitude());
             ps.setDouble(3, p.getLongitude());
             ps.setLong(4, p.getTimestamp());
+            System.err.println(TAG + ps.toString());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -56,7 +56,7 @@ public class PostgressPositionDAO implements PositionDAO {
         List<Position> result = new ArrayList<Position>();
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT * FROM Position W WHERE userID = ? ORDER BY timestamp DESC LIMIT 1");
+        query.append("SELECT * FROM \"Position\" WHERE \"userID\" = ? ORDER BY \"timestamp\" DESC LIMIT 1");
 
         try {
             c = DBInterface.getConnectionDB();
@@ -89,8 +89,8 @@ public class PostgressPositionDAO implements PositionDAO {
         List<Position> result = new ArrayList<Position>();
         StringBuilder query = new StringBuilder();
 
-        query.append("SELECT * FROM Position ")
-                .append("WHERE userID = ? AND timestamp < ? AND timestamp > ?");
+        query.append("SELECT * FROM \"Position\" ")
+                .append("WHERE \"userID\" = ? AND \"timestamp\" < ? AND \"timestamp\" > ?");
 
         try {
             if (username != null) {
@@ -123,13 +123,19 @@ public class PostgressPositionDAO implements PositionDAO {
     private void readAndProcessData(ResultSet rs, List<Position> l) {
         try {
             //Leggo ogni riga ritornata, creo la Position e la aggiungo alla lista
+
+
+
             while (rs.next()) {
-                PGpoint point = (PGpoint) rs.getObject("pos");
+
+                double latitude = rs.getDouble("latitude");
+                double longitude = rs.getDouble("longitude");
+
                 long timestamp = rs.getLong("timestamp");
 
                 Position p = new Position();
-                p.setLatitude(point.x);
-                p.setLongitude(point.y);
+                p.setLatitude(latitude);
+                p.setLongitude(longitude);
                 p.setTimestamp(timestamp);
 
                 l.add(p);
